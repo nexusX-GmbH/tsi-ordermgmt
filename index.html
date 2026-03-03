@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TSI Tennisclub – Teamkleidung bestellen</title>
+  <!-- Favicon: Tennis-Emoji als inline SVG -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎾</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -26,7 +28,7 @@
 
       --color-text:          #1A2E1E;   /* Fast Schwarz, warm-grün */
       --color-text-muted:    #5A6E5F;
-      --color-text-light:    #8A9E8F;
+      --color-text-light:    #4E6054;   /* Auf Weiß: ~6.6:1 → WCAG AA ✓ */
 
       --color-border:        #D4DDD6;
       --color-border-focus:  #2D7D46;
@@ -138,7 +140,7 @@
 
     .site-header__subtitle {
       font-size: var(--text-sm);
-      opacity: 0.8;
+      color: #fff; /* Vollton statt opacity – weiss auf grün #2D7D46 ≈ 5:1 → WCAG AA ✓ */
       margin-top: 2px;
     }
 
@@ -276,7 +278,7 @@
 
     .price-bar__label {
       font-size: var(--text-sm);
-      opacity: 0.85;
+      color: #fff; /* Vollton – weiss auf grün → WCAG AA ✓ */
     }
 
     .price-bar__amount {
@@ -290,6 +292,8 @@
       color: var(--color-primary-dark);
       font-weight: 700;
       font-size: var(--text-sm);
+      /* min-height 44px für Touch-Target */
+      min-height: 44px;
       padding: var(--space-sm) var(--space-lg);
       border-radius: var(--radius-full);
       transition: background var(--transition), transform var(--transition);
@@ -451,13 +455,18 @@
     }
 
     .size-btn {
-      padding: 5px 12px;
+      /* min-height 44px für WCAG 2.5.5 Touch-Target */
+      min-height: 44px;
+      padding: 10px 14px;
       border-radius: var(--radius-sm);
       border: 1.5px solid var(--color-border);
       font-size: var(--text-sm);
       font-weight: 500;
       color: var(--color-text-muted);
       background: var(--color-surface);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       transition: border-color var(--transition), background var(--transition), color var(--transition);
     }
 
@@ -494,8 +503,9 @@
     }
 
     .qty-btn {
-      width: 32px;
-      height: 32px;
+      /* 44×44px für WCAG 2.5.5 Touch-Target */
+      width: 44px;
+      height: 44px;
       border-radius: var(--radius-sm);
       border: 1.5px solid var(--color-border);
       background: var(--color-surface);
@@ -711,6 +721,35 @@
       color: var(--color-primary);
     }
 
+    /* Datenschutzhinweis */
+    .privacy-notice {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      margin-top: var(--space-md);
+      padding: var(--space-sm) var(--space-md);
+      background: var(--color-surface-2);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--color-border);
+    }
+
+    /* Tabellen-Scrollbereich für kleine Screens */
+    .table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Abstand zwischen Tabellenspalten */
+    .summary-table th,
+    .summary-table td {
+      padding-right: var(--space-sm);
+    }
+
+    .summary-table th:last-child,
+    .summary-table td:last-child {
+      padding-right: 0;
+    }
+
     /* Submit-Button & Fehlermeldung */
     .submit-area {
       margin-top: var(--space-xl);
@@ -800,6 +839,8 @@
       color: var(--color-text-muted);
       font-size: var(--text-sm);
       font-weight: 500;
+      /* min-height 44px für Touch-Target */
+      min-height: 44px;
       margin-bottom: var(--space-lg);
       cursor: pointer;
       transition: color var(--transition);
@@ -958,8 +999,8 @@
 
         <div id="catalog-content">
           <!-- Wird per JavaScript befüllt -->
-          <div class="loading-state" id="loading-state">
-            <div class="loading-spinner"></div>
+          <div class="loading-state" id="loading-state" role="status" aria-label="Artikel werden geladen">
+            <div class="loading-spinner" aria-hidden="true"></div>
             <p>Artikel werden geladen…</p>
           </div>
         </div>
@@ -997,8 +1038,11 @@
                 autocomplete="given-name"
                 placeholder="z.&nbsp;B. Max"
                 required
+                aria-required="true"
+                aria-describedby="error-vorname"
+                aria-invalid="false"
               />
-              <span class="form-error" id="error-vorname">Bitte gib deinen Vornamen ein.</span>
+              <span class="form-error" id="error-vorname" role="alert" aria-live="assertive">Bitte gib deinen Vornamen ein.</span>
             </div>
 
             <div class="form-group">
@@ -1013,8 +1057,11 @@
                 autocomplete="family-name"
                 placeholder="z.&nbsp;B. Mustermann"
                 required
+                aria-required="true"
+                aria-describedby="error-nachname"
+                aria-invalid="false"
               />
-              <span class="form-error" id="error-nachname">Bitte gib deinen Nachnamen ein.</span>
+              <span class="form-error" id="error-nachname" role="alert" aria-live="assertive">Bitte gib deinen Nachnamen ein.</span>
             </div>
 
             <div class="form-group">
@@ -1029,8 +1076,11 @@
                 autocomplete="tel"
                 placeholder="z.&nbsp;B. 0171 1234567"
                 required
+                aria-required="true"
+                aria-describedby="error-telefon"
+                aria-invalid="false"
               />
-              <span class="form-error" id="error-telefon">Bitte gib eine gültige Telefonnummer ein.</span>
+              <span class="form-error" id="error-telefon" role="alert" aria-live="assertive">Bitte gib eine gültige Telefonnummer ein.</span>
             </div>
           </div>
 
@@ -1038,19 +1088,21 @@
           <div class="summary-card">
             <h3 class="summary-card__title">Deine Bestellung</h3>
 
-            <table class="summary-table" aria-label="Bestellübersicht">
-              <thead>
-                <tr>
-                  <th>Artikel</th>
-                  <th>Größe</th>
-                  <th>Stk.</th>
-                  <th>Summe</th>
-                </tr>
-              </thead>
-              <tbody id="summary-table-body">
-                <!-- Wird per JavaScript befüllt -->
-              </tbody>
-            </table>
+            <div class="table-scroll">
+              <table class="summary-table" aria-label="Bestellübersicht">
+                <thead>
+                  <tr>
+                    <th>Artikel</th>
+                    <th>Größe</th>
+                    <th>Stk.</th>
+                    <th>Summe</th>
+                  </tr>
+                </thead>
+                <tbody id="summary-table-body">
+                  <!-- Wird per JavaScript befüllt -->
+                </tbody>
+              </table>
+            </div>
 
             <div class="summary-table__total">
               <span class="summary-table__total-label">Gesamtsumme</span>
@@ -1062,6 +1114,9 @@
               <button class="btn-primary" id="btn-submit" type="button">
                 Verbindlich bestellen
               </button>
+              <p class="privacy-notice">
+                Deine Daten werden ausschließlich für die Bearbeitung dieser Bestellung verwendet und nicht an Dritte weitergegeben.
+              </p>
             </div>
           </div>
 
@@ -1085,19 +1140,21 @@
 
           <div class="confirmation-summary">
             <div class="confirmation-summary__name" id="confirmation-name"></div>
-            <table class="summary-table" aria-label="Bestellübersicht">
-              <thead>
-                <tr>
-                  <th>Artikel</th>
-                  <th>Größe</th>
-                  <th>Stk.</th>
-                  <th>Summe</th>
-                </tr>
-              </thead>
-              <tbody id="confirmation-table-body">
-                <!-- Wird per JavaScript befüllt -->
-              </tbody>
-            </table>
+            <div class="table-scroll">
+              <table class="summary-table" aria-label="Bestellübersicht">
+                <thead>
+                  <tr>
+                    <th>Artikel</th>
+                    <th>Größe</th>
+                    <th>Stk.</th>
+                    <th>Summe</th>
+                  </tr>
+                </thead>
+                <tbody id="confirmation-table-body">
+                  <!-- Wird per JavaScript befüllt -->
+                </tbody>
+              </table>
+            </div>
             <div class="summary-table__total">
               <span class="summary-table__total-label">Gesamtsumme</span>
               <span class="summary-table__total-amount" id="confirmation-total"></span>
@@ -1249,11 +1306,13 @@
 
         renderCatalog(contentEl);
 
-      } catch (err) {
+      } catch (_err) {
         contentEl.innerHTML = `
-          <div class="error-state">
-            <p>Artikel konnten nicht geladen werden.</p>
-            <p style="font-size:var(--text-xs);margin-top:var(--space-sm);">${err.message}</p>
+          <div class="error-state" role="alert">
+            <p><strong>Artikel konnten nicht geladen werden.</strong></p>
+            <p style="font-size:var(--text-sm);margin-top:var(--space-sm);color:var(--color-text-muted);">
+              Bitte lade die Seite erneut. Sollte das Problem weiterhin bestehen, wende dich an den Teamverantwortlichen.
+            </p>
           </div>`;
       }
     }
@@ -1336,6 +1395,8 @@
       sizeWarning.className = "size-warning";
       sizeWarning.id = `size-warning-${article.id}`;
       sizeWarning.textContent = "Bitte wähle eine Größe.";
+      sizeWarning.setAttribute("role", "alert");
+      sizeWarning.setAttribute("aria-live", "assertive");
 
       sizeSection.appendChild(sizeButtons);
       sizeSection.appendChild(sizeWarning);
@@ -1477,6 +1538,7 @@
       const isValid = checkFn(input.value.trim());
 
       input.classList.toggle("invalid", !isValid);
+      input.setAttribute("aria-invalid", isValid ? "false" : "true");
       errorEl.classList.toggle("visible", !isValid);
 
       return isValid;
@@ -1547,9 +1609,10 @@
         // Erfolg – Bestätigung anzeigen
         showConfirmation(vorname, nachname, artikelPayload, calcTotal());
 
-      } catch (err) {
+      } catch (_err) {
         // Fehler anzeigen, Button wieder freigeben
-        errorEl.textContent = `Die Bestellung konnte nicht gesendet werden. Bitte versuche es erneut. (${err.message})`;
+        errorEl.textContent =
+          "Die Bestellung konnte nicht gesendet werden. Bitte prüfe deine Internetverbindung und versuche es in wenigen Minuten erneut. Klappt es weiterhin nicht, wende dich direkt an den Teamverantwortlichen.";
         errorEl.classList.add("visible");
 
         submitBtn.disabled = false;
@@ -1603,6 +1666,7 @@
         if (el) {
           el.value = "";
           el.classList.remove("invalid");
+          el.setAttribute("aria-invalid", "false");
         }
       });
       ["error-vorname", "error-nachname", "error-telefon"].forEach(id => {
