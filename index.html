@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TSI Tennisclub – Teamkleidung bestellen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES
+       ============================================================ */
+    :root {
+      /* Farbpalette – Tennis/Sport */
+      --color-primary:       #2D7D46;   /* Dunkelgrün (Court-Grün) */
+      --color-primary-light: #3DA05C;   /* Helleres Grün für Hover */
+      --color-primary-dark:  #1E5C33;   /* Noch dunkler für aktive States */
+      --color-accent:        #C8E63C;   /* Tennisball-Gelb/Grün als Akzent */
+      --color-accent-dark:   #A8C020;
+
+      --color-bg:            #F4F6F3;   /* Heller Hintergrund mit leichtem Grünstich */
+      --color-surface:       #FFFFFF;
+      --color-surface-2:     #F0F4EE;
+
+      --color-text:          #1A2E1E;   /* Fast Schwarz, warm-grün */
+      --color-text-muted:    #5A6E5F;
+      --color-text-light:    #8A9E8F;
+
+      --color-border:        #D4DDD6;
+      --color-border-focus:  #2D7D46;
+
+      --color-error:         #C0392B;
+      --color-error-bg:      #FDEDEB;
+      --color-success:       #2D7D46;
+      --color-success-bg:    #EBF7EF;
+
+      /* Abstände */
+      --space-xs:   4px;
+      --space-sm:   8px;
+      --space-md:   16px;
+      --space-lg:   24px;
+      --space-xl:   40px;
+      --space-2xl:  64px;
+
+      /* Typografie */
+      --font-body:  'Inter', system-ui, sans-serif;
+      --text-xs:    0.75rem;
+      --text-sm:    0.875rem;
+      --text-base:  1rem;
+      --text-lg:    1.125rem;
+      --text-xl:    1.25rem;
+      --text-2xl:   1.5rem;
+      --text-3xl:   1.875rem;
+      --text-4xl:   2.25rem;
+
+      /* Rahmen & Schatten */
+      --radius-sm:  6px;
+      --radius-md:  10px;
+      --radius-lg:  16px;
+      --radius-xl:  24px;
+      --radius-full: 9999px;
+
+      --shadow-sm:  0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
+      --shadow-md:  0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.05);
+      --shadow-lg:  0 10px 30px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.06);
+
+      /* Übergänge */
+      --transition: 180ms ease;
+    }
+
+    /* ============================================================
+       RESET & BASIS
+       ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      background: var(--color-bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    input {
+      font-family: inherit;
+    }
+
+    /* ============================================================
+       LAYOUT
+       ============================================================ */
+    .site-header {
+      background: var(--color-primary);
+      color: #fff;
+      padding: var(--space-lg) var(--space-md);
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-md);
+    }
+
+    .site-header__logo {
+      font-size: var(--text-xl);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+    }
+
+    .site-header__logo span {
+      color: var(--color-accent);
+    }
+
+    .site-header__subtitle {
+      font-size: var(--text-sm);
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+
+    /* Fortschrittsanzeige */
+    .progress-bar {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-md);
+    }
+
+    .progress-steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+      position: relative;
+    }
+
+    .progress-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: calc(50% + 14px);
+      right: calc(-50% + 14px);
+      height: 2px;
+      background: var(--color-border);
+      transition: background var(--transition);
+    }
+
+    .progress-step.done:not(:last-child)::after {
+      background: var(--color-primary);
+    }
+
+    .progress-step__dot {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-full);
+      background: var(--color-border);
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--transition), color var(--transition);
+      position: relative;
+      z-index: 1;
+    }
+
+    .progress-step.active .progress-step__dot {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .progress-step.done .progress-step__dot {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .progress-step__label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .progress-step.active .progress-step__label {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    /* Sektionen */
+    .section {
+      padding: var(--space-xl) 0 var(--space-2xl);
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section__title {
+      font-size: var(--text-2xl);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--color-text);
+      margin-bottom: var(--space-xs);
+    }
+
+    .section__subtitle {
+      color: var(--color-text-muted);
+      font-size: var(--text-base);
+      margin-bottom: var(--space-xl);
+    }
+
+    /* ============================================================
+       PREISLEISTE (sticky bottom)
+       ============================================================ */
+    .price-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--color-primary);
+      color: #fff;
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 -4px 20px rgba(0,0,0,.15);
+      z-index: 90;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .price-bar.visible {
+      transform: translateY(0);
+    }
+
+    .price-bar__label {
+      font-size: var(--text-sm);
+      opacity: 0.85;
+    }
+
+    .price-bar__amount {
+      font-size: var(--text-2xl);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .price-bar__btn {
+      background: var(--color-accent);
+      color: var(--color-primary-dark);
+      font-weight: 700;
+      font-size: var(--text-sm);
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--radius-full);
+      transition: background var(--transition), transform var(--transition);
+      white-space: nowrap;
+    }
+
+    .price-bar__btn:hover {
+      background: var(--color-accent-dark);
+      transform: scale(1.03);
+    }
+
+    /* ============================================================
+       ARTIKELKATALOG
+       ============================================================ */
+    .article-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+    }
+
+    @media (min-width: 600px) {
+      .article-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 900px) {
+      .article-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Ladezustand & Fehler */
+    .loading-state,
+    .error-state {
+      text-align: center;
+      padding: var(--space-2xl);
+      color: var(--color-text-muted);
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--color-border);
+      border-top-color: var(--color-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto var(--space-md);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .error-state {
+      color: var(--color-error);
+    }
+
+    /* Artikelkarte */
+    .article-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      transition: box-shadow var(--transition), transform var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .article-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    /* Produktbild */
+    .article-card__image-wrap {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      background: var(--color-surface-2);
+      overflow: hidden;
+    }
+
+    .article-card__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .article-card:hover .article-card__image {
+      transform: scale(1.03);
+    }
+
+    /* Platzhalter wenn kein Bild */
+    .article-card__placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      color: var(--color-text-light);
+      font-size: var(--text-sm);
+    }
+
+    .article-card__placeholder svg {
+      opacity: 0.4;
+    }
+
+    .article-card__body {
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      flex: 1;
+    }
+
+    .article-card__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+
+    .article-card__name {
+      font-size: var(--text-xl);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .article-card__price {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--color-primary);
+      white-space: nowrap;
+    }
+
+    .article-card__desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+
+    /* Größenauswahl */
+    .size-selector__label {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-sm);
+    }
+
+    .size-selector__buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+
+    .size-btn {
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--color-border);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-text-muted);
+      background: var(--color-surface);
+      transition: border-color var(--transition), background var(--transition), color var(--transition);
+    }
+
+    .size-btn:hover {
+      border-color: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+
+    .size-btn.active {
+      border-color: var(--color-primary);
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    /* Stückzahl-Steuerung */
+    .quantity-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .quantity-row__label {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+    }
+
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+
+    .qty-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-size: var(--text-lg);
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color var(--transition), background var(--transition), color var(--transition);
+      font-weight: 600;
+    }
+
+    .qty-btn:hover:not(:disabled) {
+      border-color: var(--color-primary);
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    .qty-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .qty-value {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      min-width: 28px;
+      text-align: center;
+    }
+
+    /* Zwischensumme pro Artikel */
+    .article-card__subtotal {
+      background: var(--color-surface-2);
+      border-radius: var(--radius-sm);
+      padding: var(--space-sm) var(--space-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: var(--text-sm);
+      min-height: 38px;
+    }
+
+    .article-card__subtotal-label {
+      color: var(--color-text-muted);
+    }
+
+    .article-card__subtotal-amount {
+      font-weight: 700;
+      color: var(--color-primary);
+      font-size: var(--text-base);
+    }
+
+    .article-card__subtotal-amount.zero {
+      color: var(--color-text-light);
+    }
+
+    /* Fehlermeldung (Größe nicht gewählt) */
+    .size-warning {
+      font-size: var(--text-xs);
+      color: var(--color-error);
+      font-weight: 500;
+      display: none;
+    }
+
+    .size-warning.visible {
+      display: block;
+    }
+
+    /* ============================================================
+       KONTAKTDATEN & ZUSAMMENFASSUNG
+       ============================================================ */
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-xl);
+    }
+
+    @media (min-width: 800px) {
+      .contact-layout {
+        grid-template-columns: 1fr 1.5fr;
+        align-items: start;
+      }
+    }
+
+    /* Formular-Karte */
+    .form-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-card__title {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      margin-bottom: var(--space-lg);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      margin-bottom: var(--space-md);
+    }
+
+    .form-label {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .form-label .required {
+      color: var(--color-error);
+      margin-left: 2px;
+    }
+
+    .form-input {
+      padding: 10px var(--space-md);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      background: var(--color-surface);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 3px rgba(45,125,70,.12);
+    }
+
+    .form-input.invalid {
+      border-color: var(--color-error);
+    }
+
+    .form-error {
+      font-size: var(--text-xs);
+      color: var(--color-error);
+      display: none;
+    }
+
+    .form-error.visible {
+      display: block;
+    }
+
+    /* Zusammenfassungs-Karte */
+    .summary-card {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .summary-card__title {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      margin-bottom: var(--space-lg);
+    }
+
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+
+    .summary-table th {
+      text-align: left;
+      font-size: var(--text-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1.5px solid var(--color-border);
+    }
+
+    .summary-table th:last-child,
+    .summary-table td:last-child {
+      text-align: right;
+    }
+
+    .summary-table td {
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--color-surface-2);
+      vertical-align: top;
+    }
+
+    .summary-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .summary-table__total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: var(--space-md);
+      padding-top: var(--space-md);
+      border-top: 2px solid var(--color-text);
+    }
+
+    .summary-table__total-label {
+      font-size: var(--text-base);
+      font-weight: 700;
+    }
+
+    .summary-table__total-amount {
+      font-size: var(--text-xl);
+      font-weight: 800;
+      color: var(--color-primary);
+    }
+
+    /* Submit-Button & Fehlermeldung */
+    .submit-area {
+      margin-top: var(--space-xl);
+    }
+
+    .submit-error {
+      background: var(--color-error-bg);
+      color: var(--color-error);
+      border-radius: var(--radius-sm);
+      padding: var(--space-md);
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-md);
+      display: none;
+    }
+
+    .submit-error.visible {
+      display: block;
+    }
+
+    /* Primär-Button (wiederverwendbar) */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      background: var(--color-primary);
+      color: #fff;
+      font-size: var(--text-base);
+      font-weight: 700;
+      padding: 14px var(--space-xl);
+      border-radius: var(--radius-full);
+      width: 100%;
+      transition: background var(--transition), transform var(--transition), opacity var(--transition);
+      letter-spacing: -0.01em;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--color-primary-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    /* Sekundär-Button */
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      background: var(--color-surface);
+      color: var(--color-primary);
+      font-size: var(--text-base);
+      font-weight: 600;
+      padding: 12px var(--space-xl);
+      border-radius: var(--radius-full);
+      border: 2px solid var(--color-primary);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-primary);
+      color: #fff;
+    }
+
+    /* Lade-Spinner im Button */
+    .btn-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    /* Zurück-Link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      margin-bottom: var(--space-lg);
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+
+    .back-link:hover {
+      color: var(--color-primary);
+    }
+
+    /* ============================================================
+       BESTÄTIGUNG
+       ============================================================ */
+    .confirmation-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .confirmation-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--color-success-bg);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-lg);
+    }
+
+    .confirmation-icon svg {
+      color: var(--color-success);
+    }
+
+    .confirmation-wrap .section__title {
+      margin-bottom: var(--space-sm);
+    }
+
+    .confirmation-wrap .section__subtitle {
+      margin-bottom: var(--space-xl);
+    }
+
+    .confirmation-summary {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      text-align: left;
+      margin-bottom: var(--space-xl);
+    }
+
+    .confirmation-summary__name {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    /* Padding am Ende der Seite wegen fixierter Preisleiste */
+    .page-bottom-pad {
+      height: 80px;
+    }
+
+    /* ============================================================
+       UTILITIES
+       ============================================================ */
+    .hidden {
+      display: none !important;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    /* ============================================================
+       RESPONSIVE ANPASSUNGEN
+       ============================================================ */
+    @media (max-width: 480px) {
+      .site-header {
+        padding: var(--space-md);
+      }
+
+      .section__title {
+        font-size: var(--text-xl);
+      }
+
+      .article-card__body {
+        padding: var(--space-md);
+      }
+
+      .form-card,
+      .summary-card,
+      .confirmation-summary {
+        padding: var(--space-lg);
+      }
+
+      .price-bar {
+        padding: var(--space-sm) var(--space-md);
+      }
+
+      .price-bar__amount {
+        font-size: var(--text-xl);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <header class="site-header">
+    <div class="site-header__logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+        <path d="M2 12 Q7 6 12 12 Q17 18 22 12" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M12 2 Q6 7 12 12 Q18 17 12 22" stroke="currentColor" stroke-width="2" fill="none"/>
+      </svg>
+      TSI <span>Tennisclub</span>
+    </div>
+    <div class="site-header__subtitle">Teamkleidung Bestellplattform</div>
+  </header>
+
+  <!-- ============================================================
+       FORTSCHRITTSANZEIGE
+       ============================================================ -->
+  <nav class="progress-bar" aria-label="Bestellschritte">
+    <div class="progress-steps">
+      <div class="progress-step active" id="step-1">
+        <div class="progress-step__dot">1</div>
+        <div class="progress-step__label">Artikel</div>
+      </div>
+      <div class="progress-step" id="step-2">
+        <div class="progress-step__dot">2</div>
+        <div class="progress-step__label">Kontakt</div>
+      </div>
+      <div class="progress-step" id="step-3">
+        <div class="progress-step__dot">3</div>
+        <div class="progress-step__label">Bestätigung</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HAUPTINHALT
+       ============================================================ -->
+  <main>
+
+    <!-- SEKTION 1: ARTIKELKATALOG -->
+    <section class="section active" id="section-catalog" aria-labelledby="catalog-title">
+      <div class="container">
+        <h1 class="section__title" id="catalog-title">Artikel auswählen</h1>
+        <p class="section__subtitle">Wähle deine Größe und Stückzahl für jeden gewünschten Artikel.</p>
+
+        <div id="catalog-content">
+          <!-- Wird per JavaScript befüllt -->
+          <div class="loading-state" id="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Artikel werden geladen…</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEKTION 2: KONTAKTDATEN & ZUSAMMENFASSUNG -->
+    <section class="section" id="section-contact" aria-labelledby="contact-title">
+      <div class="container">
+        <button class="back-link" id="btn-back-to-catalog" aria-label="Zurück zum Artikelkatalog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M19 12H5M12 5l-7 7 7 7"/>
+          </svg>
+          Zurück zum Katalog
+        </button>
+
+        <h2 class="section__title" id="contact-title">Kontaktdaten &amp; Bestellung</h2>
+        <p class="section__subtitle">Fülle deine Kontaktdaten aus und prüfe deine Bestellung.</p>
+
+        <div class="contact-layout">
+
+          <!-- Kontaktformular -->
+          <div class="form-card">
+            <h3 class="form-card__title">Deine Kontaktdaten</h3>
+
+            <div class="form-group">
+              <label class="form-label" for="input-vorname">
+                Vorname <span class="required" aria-hidden="true">*</span>
+              </label>
+              <input
+                class="form-input"
+                type="text"
+                id="input-vorname"
+                name="vorname"
+                autocomplete="given-name"
+                placeholder="z.&nbsp;B. Max"
+                required
+              />
+              <span class="form-error" id="error-vorname">Bitte gib deinen Vornamen ein.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="input-nachname">
+                Nachname <span class="required" aria-hidden="true">*</span>
+              </label>
+              <input
+                class="form-input"
+                type="text"
+                id="input-nachname"
+                name="nachname"
+                autocomplete="family-name"
+                placeholder="z.&nbsp;B. Mustermann"
+                required
+              />
+              <span class="form-error" id="error-nachname">Bitte gib deinen Nachnamen ein.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="input-telefon">
+                Telefonnummer <span class="required" aria-hidden="true">*</span>
+              </label>
+              <input
+                class="form-input"
+                type="tel"
+                id="input-telefon"
+                name="telefon"
+                autocomplete="tel"
+                placeholder="z.&nbsp;B. 0171 1234567"
+                required
+              />
+              <span class="form-error" id="error-telefon">Bitte gib eine gültige Telefonnummer ein.</span>
+            </div>
+          </div>
+
+          <!-- Bestellzusammenfassung -->
+          <div class="summary-card">
+            <h3 class="summary-card__title">Deine Bestellung</h3>
+
+            <table class="summary-table" aria-label="Bestellübersicht">
+              <thead>
+                <tr>
+                  <th>Artikel</th>
+                  <th>Größe</th>
+                  <th>Stk.</th>
+                  <th>Summe</th>
+                </tr>
+              </thead>
+              <tbody id="summary-table-body">
+                <!-- Wird per JavaScript befüllt -->
+              </tbody>
+            </table>
+
+            <div class="summary-table__total">
+              <span class="summary-table__total-label">Gesamtsumme</span>
+              <span class="summary-table__total-amount" id="summary-total">0,00&nbsp;€</span>
+            </div>
+
+            <div class="submit-area">
+              <div class="submit-error" id="submit-error" role="alert"></div>
+              <button class="btn-primary" id="btn-submit" type="button">
+                Verbindlich bestellen
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SEKTION 3: BESTÄTIGUNG -->
+    <section class="section" id="section-confirmation" aria-labelledby="confirmation-title">
+      <div class="container">
+        <div class="confirmation-wrap">
+
+          <div class="confirmation-icon" aria-hidden="true">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+
+          <h2 class="section__title" id="confirmation-title">Danke für deine Bestellung!</h2>
+          <p class="section__subtitle" id="confirmation-subtitle"></p>
+
+          <div class="confirmation-summary">
+            <div class="confirmation-summary__name" id="confirmation-name"></div>
+            <table class="summary-table" aria-label="Bestellübersicht">
+              <thead>
+                <tr>
+                  <th>Artikel</th>
+                  <th>Größe</th>
+                  <th>Stk.</th>
+                  <th>Summe</th>
+                </tr>
+              </thead>
+              <tbody id="confirmation-table-body">
+                <!-- Wird per JavaScript befüllt -->
+              </tbody>
+            </table>
+            <div class="summary-table__total">
+              <span class="summary-table__total-label">Gesamtsumme</span>
+              <span class="summary-table__total-amount" id="confirmation-total"></span>
+            </div>
+          </div>
+
+          <button class="btn-secondary" id="btn-new-order" type="button">
+            Neue Bestellung starten
+          </button>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Sticky Preisleiste (nur in Sektion 1 sichtbar) -->
+  <div class="price-bar" id="price-bar" aria-live="polite" aria-atomic="true">
+    <div>
+      <div class="price-bar__label">Gesamtsumme</div>
+      <div class="price-bar__amount" id="price-bar-amount">0,00&nbsp;€</div>
+    </div>
+    <button class="price-bar__btn" id="btn-to-contact" type="button">
+      Zur Bestellung →
+    </button>
+  </div>
+
+  <div class="page-bottom-pad"></div>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
+  <script>
+    /* ----------------------------------------------------------
+       KONFIGURATION
+       ---------------------------------------------------------- */
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-YvfTTkV7kgmljIk2TB2on0SpMW13CnzwDG8Mc40gYv-oaPtk14MGa3BAclOHdL0zBQ/exec";
+
+    /* ----------------------------------------------------------
+       ANWENDUNGSZUSTAND
+       Alle veränderlichen Daten werden hier zentral gehalten.
+       ---------------------------------------------------------- */
+    const state = {
+      articles: [],          // Geladene Artikel aus articles.json
+      selections: {},        /* Auswahl je Artikel-ID:
+                                { groesse: string|null, stueckzahl: number } */
+    };
+
+    /* ----------------------------------------------------------
+       HILFSFUNKTIONEN
+       ---------------------------------------------------------- */
+
+    /** Formatiert einen Zahlenwert als Euro-Betrag (z.B. "45,00 €") */
+    function formatPrice(amount) {
+      return amount.toLocaleString("de-DE", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }) + "\u00a0€";
+    }
+
+    /** Gibt alle Artikel zurück, die mindestens 1 Stück ausgewählt haben */
+    function getOrderedItems() {
+      return state.articles.filter(article => {
+        const sel = state.selections[article.id];
+        return sel && sel.stueckzahl > 0;
+      });
+    }
+
+    /** Berechnet die Gesamtsumme aller ausgewählten Artikel */
+    function calcTotal() {
+      return state.articles.reduce((sum, article) => {
+        const sel = state.selections[article.id];
+        if (!sel || sel.stueckzahl === 0) return sum;
+        return sum + article.price * sel.stueckzahl;
+      }, 0);
+    }
+
+    /* ----------------------------------------------------------
+       FORTSCHRITTSANZEIGE
+       ---------------------------------------------------------- */
+
+    /**
+     * Setzt die aktive Sektion und aktualisiert die Fortschrittsanzeige.
+     * @param {1|2|3} stepNumber – Schritt, der aktiviert werden soll
+     */
+    function goToStep(stepNumber) {
+      // Sektionen ein-/ausblenden
+      document.querySelectorAll(".section").forEach((sec, idx) => {
+        sec.classList.toggle("active", idx + 1 === stepNumber);
+      });
+
+      // Fortschritts-Dots aktualisieren
+      document.querySelectorAll(".progress-step").forEach((dot, idx) => {
+        const stepIdx = idx + 1;
+        dot.classList.remove("active", "done");
+        if (stepIdx < stepNumber) dot.classList.add("done");
+        if (stepIdx === stepNumber) dot.classList.add("active");
+      });
+
+      // Preisleiste nur in Schritt 1 anzeigen
+      updatePriceBar();
+
+      // Seite nach oben scrollen
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    /* ----------------------------------------------------------
+       PREISLEISTE (sticky bottom)
+       ---------------------------------------------------------- */
+
+    function updatePriceBar() {
+      const total = calcTotal();
+      const bar = document.getElementById("price-bar");
+      const amountEl = document.getElementById("price-bar-amount");
+      const inCatalog = document.getElementById("section-catalog").classList.contains("active");
+
+      amountEl.textContent = formatPrice(total);
+
+      // Leiste nur einblenden wenn: in Katalog UND Gesamtsumme > 0
+      bar.classList.toggle("visible", inCatalog && total > 0);
+    }
+
+    /* ----------------------------------------------------------
+       ARTIKELKATALOG LADEN & RENDERN
+       ---------------------------------------------------------- */
+
+    /** Lädt articles.json und baut den Katalog auf */
+    async function loadCatalog() {
+      const contentEl = document.getElementById("catalog-content");
+
+      try {
+        const response = await fetch("articles.json");
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const articles = await response.json();
+
+        // Nur aktive Artikel anzeigen
+        state.articles = articles.filter(a => a.active);
+
+        if (state.articles.length === 0) {
+          contentEl.innerHTML = '<p class="error-state">Keine Artikel verfügbar.</p>';
+          return;
+        }
+
+        // Initialzustand für alle Artikel anlegen
+        state.articles.forEach(article => {
+          state.selections[article.id] = { groesse: null, stueckzahl: 0 };
+        });
+
+        renderCatalog(contentEl);
+
+      } catch (err) {
+        contentEl.innerHTML = `
+          <div class="error-state">
+            <p>Artikel konnten nicht geladen werden.</p>
+            <p style="font-size:var(--text-xs);margin-top:var(--space-sm);">${err.message}</p>
+          </div>`;
+      }
+    }
+
+    /** Baut das Artikel-Grid und alle Karten auf */
+    function renderCatalog(container) {
+      const grid = document.createElement("div");
+      grid.className = "article-grid";
+
+      state.articles.forEach(article => {
+        grid.appendChild(buildArticleCard(article));
+      });
+
+      container.innerHTML = "";
+      container.appendChild(grid);
+    }
+
+    /** Erstellt das DOM-Element für eine einzelne Artikelkarte */
+    function buildArticleCard(article) {
+      const card = document.createElement("article");
+      card.className = "article-card";
+      card.dataset.id = article.id;
+
+      // --- Produktbild ---
+      const imageWrap = document.createElement("div");
+      imageWrap.className = "article-card__image-wrap";
+
+      const img = document.createElement("img");
+      img.className = "article-card__image";
+      img.alt = article.name;
+      img.src = article.image;
+
+      // Fallback: Platzhalter wenn Bild nicht lädt
+      img.addEventListener("error", () => {
+        imageWrap.innerHTML = `
+          <div class="article-card__placeholder">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span>Produktfoto folgt</span>
+          </div>`;
+      });
+
+      imageWrap.appendChild(img);
+
+      // --- Karteninhalt ---
+      const body = document.createElement("div");
+      body.className = "article-card__body";
+
+      // Name & Preis
+      body.innerHTML = `
+        <div class="article-card__header">
+          <h2 class="article-card__name">${escapeHtml(article.name)}</h2>
+          <div class="article-card__price">${formatPrice(article.price)}</div>
+        </div>
+        <p class="article-card__desc">${escapeHtml(article.description)}</p>`;
+
+      // Größenauswahl
+      const sizeSection = document.createElement("div");
+      sizeSection.innerHTML = `<div class="size-selector__label">Größe</div>`;
+
+      const sizeButtons = document.createElement("div");
+      sizeButtons.className = "size-selector__buttons";
+      sizeButtons.setAttribute("role", "group");
+      sizeButtons.setAttribute("aria-label", `Größe für ${article.name}`);
+
+      article.sizes.forEach(size => {
+        const btn = document.createElement("button");
+        btn.className = "size-btn";
+        btn.type = "button";
+        btn.textContent = size;
+        btn.setAttribute("aria-pressed", "false");
+        btn.addEventListener("click", () => onSizeSelect(article.id, size, btn));
+        sizeButtons.appendChild(btn);
+      });
+
+      const sizeWarning = document.createElement("span");
+      sizeWarning.className = "size-warning";
+      sizeWarning.id = `size-warning-${article.id}`;
+      sizeWarning.textContent = "Bitte wähle eine Größe.";
+
+      sizeSection.appendChild(sizeButtons);
+      sizeSection.appendChild(sizeWarning);
+
+      // Stückzahl
+      const qtyRow = document.createElement("div");
+      qtyRow.className = "quantity-row";
+      qtyRow.innerHTML = `
+        <span class="quantity-row__label">Stückzahl</span>
+        <div class="quantity-control">
+          <button class="qty-btn qty-minus" type="button" aria-label="Stückzahl verringern" disabled>−</button>
+          <span class="qty-value" id="qty-${article.id}" aria-live="polite">0</span>
+          <button class="qty-btn qty-plus" type="button" aria-label="Stückzahl erhöhen">+</button>
+        </div>`;
+
+      qtyRow.querySelector(".qty-minus").addEventListener("click", () => onQtyChange(article.id, -1));
+      qtyRow.querySelector(".qty-plus").addEventListener("click",  () => onQtyChange(article.id, +1));
+
+      // Zwischensumme
+      const subtotalEl = document.createElement("div");
+      subtotalEl.className = "article-card__subtotal";
+      subtotalEl.innerHTML = `
+        <span class="article-card__subtotal-label">Zwischensumme</span>
+        <span class="article-card__subtotal-amount zero" id="subtotal-${article.id}">0,00&nbsp;€</span>`;
+
+      body.appendChild(sizeSection);
+      body.appendChild(qtyRow);
+      body.appendChild(subtotalEl);
+
+      card.appendChild(imageWrap);
+      card.appendChild(body);
+
+      return card;
+    }
+
+    /* ----------------------------------------------------------
+       INTERAKTIONS-HANDLER
+       ---------------------------------------------------------- */
+
+    /** Behandelt Klick auf einen Größen-Button */
+    function onSizeSelect(articleId, size, clickedBtn) {
+      state.selections[articleId].groesse = size;
+
+      // Aktiven Button markieren
+      const card = document.querySelector(`.article-card[data-id="${articleId}"]`);
+      card.querySelectorAll(".size-btn").forEach(btn => {
+        btn.classList.toggle("active", btn === clickedBtn);
+        btn.setAttribute("aria-pressed", btn === clickedBtn ? "true" : "false");
+      });
+
+      // Größen-Warnung verbergen
+      document.getElementById(`size-warning-${articleId}`)?.classList.remove("visible");
+    }
+
+    /** Behandelt +/- Klick auf Stückzahl */
+    function onQtyChange(articleId, delta) {
+      const sel = state.selections[articleId];
+      const article = state.articles.find(a => a.id === articleId);
+
+      const newQty = Math.max(0, Math.min(10, sel.stueckzahl + delta));
+      sel.stueckzahl = newQty;
+
+      // Anzeigen aktualisieren
+      const qtyEl      = document.getElementById(`qty-${articleId}`);
+      const subtotalEl = document.getElementById(`subtotal-${articleId}`);
+      const card       = document.querySelector(`.article-card[data-id="${articleId}"]`);
+
+      qtyEl.textContent = newQty;
+
+      const subtotal = article.price * newQty;
+      subtotalEl.textContent = formatPrice(subtotal);
+      subtotalEl.classList.toggle("zero", newQty === 0);
+
+      // +/- Buttons aktualisieren
+      card.querySelector(".qty-minus").disabled = newQty <= 0;
+      card.querySelector(".qty-plus").disabled  = newQty >= 10;
+
+      updatePriceBar();
+    }
+
+    /* ----------------------------------------------------------
+       NAVIGATION ZWISCHEN SEKTIONEN
+       ---------------------------------------------------------- */
+
+    /** Wechselt von Katalog zu Kontakt/Zusammenfassung */
+    function showContactSection() {
+      const orderedItems = getOrderedItems();
+
+      // Mindestens ein Artikel muss ausgewählt sein
+      if (orderedItems.length === 0) return;
+
+      // Prüfen ob für alle bestellten Artikel eine Größe gewählt wurde
+      let allSizesSelected = true;
+      orderedItems.forEach(article => {
+        const sel = state.selections[article.id];
+        if (!sel.groesse) {
+          allSizesSelected = false;
+          document.getElementById(`size-warning-${article.id}`)?.classList.add("visible");
+        }
+      });
+
+      if (!allSizesSelected) return;
+
+      buildSummaryTable();
+      goToStep(2);
+    }
+
+    /** Baut die Bestellzusammenfassung für Sektion 2 auf */
+    function buildSummaryTable() {
+      const tbody = document.getElementById("summary-table-body");
+      tbody.innerHTML = "";
+
+      getOrderedItems().forEach(article => {
+        const sel = state.selections[article.id];
+        const subtotal = article.price * sel.stueckzahl;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${escapeHtml(article.name)}</td>
+          <td>${escapeHtml(sel.groesse)}</td>
+          <td>${sel.stueckzahl}</td>
+          <td>${formatPrice(subtotal)}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById("summary-total").textContent = formatPrice(calcTotal());
+    }
+
+    /* ----------------------------------------------------------
+       FORMULARVALIDIERUNG
+       ---------------------------------------------------------- */
+
+    /**
+     * Validiert ein einzelnes Textfeld.
+     * @returns {boolean} true wenn gültig
+     */
+    function validateField(inputId, errorId, checkFn) {
+      const input = document.getElementById(inputId);
+      const errorEl = document.getElementById(errorId);
+      const isValid = checkFn(input.value.trim());
+
+      input.classList.toggle("invalid", !isValid);
+      errorEl.classList.toggle("visible", !isValid);
+
+      return isValid;
+    }
+
+    /** Validiert alle Kontaktfelder und gibt true zurück wenn alle gültig sind */
+    function validateContactForm() {
+      const vornameOk  = validateField("input-vorname",  "error-vorname",  v => v.length >= 2);
+      const nachnameOk = validateField("input-nachname", "error-nachname", v => v.length >= 2);
+      const telefonOk  = validateField("input-telefon",  "error-telefon",  v => v.length >= 6 && /^[\d\s\+\-\/\(\)]+$/.test(v));
+
+      return vornameOk && nachnameOk && telefonOk;
+    }
+
+    /* ----------------------------------------------------------
+       BESTELLUNG ABSENDEN
+       ---------------------------------------------------------- */
+
+    /** Sendet die Bestellung per POST an das Google Apps Script */
+    async function submitOrder() {
+      if (!validateContactForm()) return;
+
+      const vorname  = document.getElementById("input-vorname").value.trim();
+      const nachname = document.getElementById("input-nachname").value.trim();
+      const telefon  = document.getElementById("input-telefon").value.trim();
+
+      const orderedItems = getOrderedItems();
+
+      // Sicherheits-Check: Mindestens ein Artikel
+      if (orderedItems.length === 0) return;
+
+      const artikelPayload = orderedItems.map(article => {
+        const sel = state.selections[article.id];
+        return {
+          name:          article.name,
+          groesse:       sel.groesse,
+          stueckzahl:    sel.stueckzahl,
+          einzelpreis:   article.price,
+          zwischensumme: article.price * sel.stueckzahl,
+        };
+      });
+
+      const payload = {
+        vorname,
+        nachname,
+        telefon,
+        artikel:      artikelPayload,
+        gesamtsumme:  calcTotal(),
+      };
+
+      // Button deaktivieren & Ladeanimation zeigen
+      const submitBtn = document.getElementById("btn-submit");
+      const errorEl   = document.getElementById("submit-error");
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="btn-spinner"></span> Wird gesendet…`;
+      errorEl.classList.remove("visible");
+
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method:  "POST",
+          headers: { "Content-Type": "application/json" },
+          body:    JSON.stringify(payload),
+        });
+
+        if (!response.ok) throw new Error(`Serverfehler: HTTP ${response.status}`);
+
+        // Erfolg – Bestätigung anzeigen
+        showConfirmation(vorname, nachname, artikelPayload, calcTotal());
+
+      } catch (err) {
+        // Fehler anzeigen, Button wieder freigeben
+        errorEl.textContent = `Die Bestellung konnte nicht gesendet werden. Bitte versuche es erneut. (${err.message})`;
+        errorEl.classList.add("visible");
+
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "Verbindlich bestellen";
+      }
+    }
+
+    /* ----------------------------------------------------------
+       BESTÄTIGUNGSSEITE
+       ---------------------------------------------------------- */
+
+    function showConfirmation(vorname, nachname, artikel, gesamtsumme) {
+      // Personalisierte Nachricht
+      document.getElementById("confirmation-subtitle").textContent =
+        `Wir haben deine Bestellung erhalten, ${vorname}. Du wirst bei Fragen unter deiner angegebenen Telefonnummer kontaktiert.`;
+
+      document.getElementById("confirmation-name").textContent =
+        `${vorname} ${nachname}`;
+
+      // Tabelle befüllen
+      const tbody = document.getElementById("confirmation-table-body");
+      tbody.innerHTML = "";
+      artikel.forEach(item => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${escapeHtml(item.name)}</td>
+          <td>${escapeHtml(item.groesse)}</td>
+          <td>${item.stueckzahl}</td>
+          <td>${formatPrice(item.zwischensumme)}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById("confirmation-total").textContent = formatPrice(gesamtsumme);
+
+      goToStep(3);
+    }
+
+    /* ----------------------------------------------------------
+       NEUE BESTELLUNG (Reset)
+       ---------------------------------------------------------- */
+
+    function resetApp() {
+      // Zustand zurücksetzen
+      state.articles.forEach(article => {
+        state.selections[article.id] = { groesse: null, stueckzahl: 0 };
+      });
+
+      // Formulare leeren
+      ["input-vorname", "input-nachname", "input-telefon"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.value = "";
+          el.classList.remove("invalid");
+        }
+      });
+      ["error-vorname", "error-nachname", "error-telefon"].forEach(id => {
+        document.getElementById(id)?.classList.remove("visible");
+      });
+      document.getElementById("submit-error")?.classList.remove("visible");
+
+      // Alle Artikelkarten zurücksetzen
+      state.articles.forEach(article => {
+        // Größen-Buttons de-aktivieren
+        const card = document.querySelector(`.article-card[data-id="${article.id}"]`);
+        if (card) {
+          card.querySelectorAll(".size-btn").forEach(btn => {
+            btn.classList.remove("active");
+            btn.setAttribute("aria-pressed", "false");
+          });
+          const qtyEl = document.getElementById(`qty-${article.id}`);
+          if (qtyEl) qtyEl.textContent = "0";
+
+          const subtotalEl = document.getElementById(`subtotal-${article.id}`);
+          if (subtotalEl) {
+            subtotalEl.textContent = "0,00\u00a0€";
+            subtotalEl.classList.add("zero");
+          }
+
+          card.querySelector(".qty-minus").disabled = true;
+          card.querySelector(".qty-plus").disabled  = false;
+
+          document.getElementById(`size-warning-${article.id}`)?.classList.remove("visible");
+        }
+      });
+
+      // Submit-Button zurücksetzen
+      const submitBtn = document.getElementById("btn-submit");
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = "Verbindlich bestellen";
+      }
+
+      goToStep(1);
+    }
+
+    /* ----------------------------------------------------------
+       SICHERHEIT: HTML escapen
+       ---------------------------------------------------------- */
+
+    /** Verhindert XSS durch Escapen von HTML-Sonderzeichen */
+    function escapeHtml(str) {
+      const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+      return String(str).replace(/[&<>"']/g, c => map[c]);
+    }
+
+    /* ----------------------------------------------------------
+       EVENT LISTENER REGISTRIEREN
+       ---------------------------------------------------------- */
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // Artikelkatalog laden
+      loadCatalog();
+
+      // "Zur Bestellung" – Preisleisten-Button
+      document.getElementById("btn-to-contact").addEventListener("click", showContactSection);
+
+      // "Zurück zum Katalog"
+      document.getElementById("btn-back-to-catalog").addEventListener("click", () => goToStep(1));
+
+      // "Verbindlich bestellen"
+      document.getElementById("btn-submit").addEventListener("click", submitOrder);
+
+      // "Neue Bestellung starten"
+      document.getElementById("btn-new-order").addEventListener("click", resetApp);
+
+      // Live-Validierung beim Verlassen der Eingabefelder
+      document.getElementById("input-vorname").addEventListener("blur", () =>
+        validateField("input-vorname", "error-vorname", v => v.length >= 2));
+      document.getElementById("input-nachname").addEventListener("blur", () =>
+        validateField("input-nachname", "error-nachname", v => v.length >= 2));
+      document.getElementById("input-telefon").addEventListener("blur", () =>
+        validateField("input-telefon", "error-telefon", v => v.length >= 6 && /^[\d\s\+\-\/\(\)]+$/.test(v)));
+    });
+  </script>
+
+</body>
+</html>
