@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Trikot",
+    "description": "Atmungsaktives Polyester-Trikot",
+    "sizes": ["XS", "S", "M", "L", "XL", "XXL"],
+    "price": 45.00,
+    "image": "images/trikot.jpg",
+    "active": true
+  },
+  {
+    "id": 2,
+    "name": "Hose",
+    "description": "Leichte Sporthose mit Taschen",
+    "sizes": ["XS", "S", "M", "L", "XL", "XXL"],
+    "price": 35.00,
+    "image": "images/hose.jpg",
+    "active": true
+  },
+  {
+    "id": 3,
+    "name": "Socken",
+    "description": "Sportsocken im 2er-Pack",
+    "sizes": ["35-38", "39-42", "43-46"],
+    "price": 12.00,
+    "image": "images/socken.jpg",
+    "active": true
+  },
+  {
+    "id": 4,
+    "name": "Jacke",
+    "description": "Trainingsjacke mit Reißverschluss",
+    "sizes": ["XS", "S", "M", "L", "XL", "XXL"],
+    "price": 65.00,
+    "image": "images/jacke.jpg",
+    "active": true
+  }
+]
