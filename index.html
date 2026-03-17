@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TSI Tennisclub – Teamkleidung bestellen</title>
-  <!-- Favicon: Tennis-Emoji als inline SVG -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎾</text></svg>" />
+  <title>Tennis-Club Bamberg 1882 e.V. – Teamkleidung bestellen</title>
+  <!-- Favicon: TCB Logo -->
+  <link rel="icon" href="images/logo-tcb.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -134,13 +134,24 @@
       justify-content: space-between;
     }
 
-    .site-header__logo {
-      font-size: var(--text-xl);
-      font-weight: 800;
-      letter-spacing: 0.02em;
+    .site-header__brand {
       display: flex;
       align-items: center;
-      gap: var(--space-sm);
+      gap: var(--space-md);
+    }
+
+    .site-header__logo-img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .site-header__logo {
+      font-size: var(--text-lg);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
     }
 
     .site-header__logo span {
@@ -149,8 +160,9 @@
 
     .site-header__subtitle {
       font-size: var(--text-sm);
-      color: rgba(255,255,255,.75);
+      color: rgba(255,255,255,.7);
       font-weight: 400;
+      margin-top: 2px;
     }
 
     .container {
@@ -993,16 +1005,12 @@
        ============================================================ -->
   <header class="site-header">
     <div class="site-header__inner">
-      <div>
-        <div class="site-header__logo">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-            <path d="M2 12 Q7 6 12 12 Q17 18 22 12" stroke="currentColor" stroke-width="2" fill="none"/>
-            <path d="M12 2 Q6 7 12 12 Q18 17 12 22" stroke="currentColor" stroke-width="2" fill="none"/>
-          </svg>
-          TSI <span>Tennisclub</span>
+      <div class="site-header__brand">
+        <img src="images/logo-tcb.png" alt="TC Bamberg Logo" class="site-header__logo-img" />
+        <div>
+          <div class="site-header__logo">Tennis-Club Bamberg <span>1882 e.V.</span></div>
+          <div class="site-header__subtitle">Teamkleidung Bestellplattform</div>
         </div>
-        <div class="site-header__subtitle">Teamkleidung Bestellplattform</div>
       </div>
     </div>
   </header>
