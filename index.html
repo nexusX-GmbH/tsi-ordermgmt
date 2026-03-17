@@ -15,28 +15,31 @@
        CSS CUSTOM PROPERTIES
        ============================================================ */
     :root {
-      /* Farbpalette – Tennis/Sport */
-      --color-primary:       #2D7D46;   /* Dunkelgrün (Court-Grün) */
-      --color-primary-light: #3DA05C;   /* Helleres Grün für Hover */
-      --color-primary-dark:  #1E5C33;   /* Noch dunkler für aktive States */
-      --color-accent:        #C8E63C;   /* Tennisball-Gelb/Grün als Akzent */
-      --color-accent-dark:   #A8C020;
+      /* Farbpalette – TC Bamberg Stil (Teal/Dunkelblau-Grün) */
+      --color-primary:       #006B5E;   /* Dunkles Teal – Hauptfarbe */
+      --color-primary-light: #008C7A;   /* Helleres Teal für Hover */
+      --color-primary-dark:  #004D44;   /* Noch dunkler für aktive States */
+      --color-accent:        #E8B630;   /* Warmes Gold als Akzent */
+      --color-accent-dark:   #C99A1C;
 
-      --color-bg:            #F4F6F3;   /* Heller Hintergrund mit leichtem Grünstich */
+      --color-bg:            #F5F5F5;   /* Neutrales helles Grau */
       --color-surface:       #FFFFFF;
-      --color-surface-2:     #F0F4EE;
+      --color-surface-2:     #EEEEEE;
 
-      --color-text:          #1A2E1E;   /* Fast Schwarz, warm-grün */
-      --color-text-muted:    #5A6E5F;
-      --color-text-light:    #4E6054;   /* Auf Weiß: ~6.6:1 → WCAG AA ✓ */
+      --color-text:          #212121;   /* Fast Schwarz, neutral */
+      --color-text-muted:    #666666;
+      --color-text-light:    #555555;   /* Auf Weiß: WCAG AA ✓ */
 
-      --color-border:        #D4DDD6;
-      --color-border-focus:  #2D7D46;
+      --color-border:        #DDDDDD;
+      --color-border-focus:  #006B5E;
 
       --color-error:         #C0392B;
       --color-error-bg:      #FDEDEB;
-      --color-success:       #2D7D46;
-      --color-success-bg:    #EBF7EF;
+      --color-success:       #006B5E;
+      --color-success-bg:    #E6F5F2;
+
+      --color-footer-bg:     #1A1A2E;  /* Dunkler Footer wie TC Bamberg */
+      --color-footer-text:   #CCCCCC;
 
       /* Abstände */
       --space-xs:   4px;
@@ -58,18 +61,18 @@
       --text-4xl:   2.25rem;
 
       /* Rahmen & Schatten */
-      --radius-sm:  6px;
-      --radius-md:  10px;
-      --radius-lg:  16px;
-      --radius-xl:  24px;
+      --radius-sm:  4px;
+      --radius-md:  8px;
+      --radius-lg:  8px;
+      --radius-xl:  12px;
       --radius-full: 9999px;
 
-      --shadow-sm:  0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
-      --shadow-md:  0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.05);
-      --shadow-lg:  0 10px 30px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.06);
+      --shadow-sm:  0 1px 3px rgba(0,0,0,.08);
+      --shadow-md:  0 2px 8px rgba(0,0,0,.10);
+      --shadow-lg:  0 4px 20px rgba(0,0,0,.12);
 
       /* Übergänge */
-      --transition: 180ms ease;
+      --transition: 200ms ease;
     }
 
     /* ============================================================
@@ -114,23 +117,29 @@
        LAYOUT
        ============================================================ */
     .site-header {
-      background: var(--color-primary);
+      background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%);
       color: #fff;
-      padding: var(--space-lg) var(--space-md);
-      text-align: center;
+      padding: var(--space-md) var(--space-lg);
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: var(--shadow-md);
+      box-shadow: 0 2px 10px rgba(0,0,0,.2);
+    }
+
+    .site-header__inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .site-header__logo {
       font-size: var(--text-xl);
       font-weight: 800;
-      letter-spacing: -0.02em;
+      letter-spacing: 0.02em;
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: var(--space-sm);
     }
 
@@ -140,8 +149,8 @@
 
     .site-header__subtitle {
       font-size: var(--text-sm);
-      color: #fff; /* Vollton statt opacity – weiss auf grün #2D7D46 ≈ 5:1 → WCAG AA ✓ */
-      margin-top: 2px;
+      color: rgba(255,255,255,.75);
+      font-weight: 400;
     }
 
     .container {
@@ -153,7 +162,7 @@
     /* Fortschrittsanzeige */
     .progress-bar {
       background: var(--color-surface);
-      border-bottom: 1px solid var(--color-border);
+      border-bottom: 2px solid var(--color-border);
       padding: var(--space-md);
     }
 
@@ -241,9 +250,22 @@
     .section__title {
       font-size: var(--text-2xl);
       font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--color-text);
+      letter-spacing: -0.01em;
+      color: var(--color-primary-dark);
       margin-bottom: var(--space-xs);
+      position: relative;
+      padding-bottom: var(--space-sm);
+    }
+
+    .section__title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--color-accent);
+      border-radius: 2px;
     }
 
     .section__subtitle {
@@ -260,13 +282,13 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: var(--color-primary);
+      background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
       color: #fff;
       padding: var(--space-md) var(--space-lg);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 -4px 20px rgba(0,0,0,.15);
+      box-shadow: 0 -4px 20px rgba(0,0,0,.2);
       z-index: 90;
       transform: translateY(100%);
       transition: transform 0.3s ease;
@@ -289,15 +311,16 @@
 
     .price-bar__btn {
       background: var(--color-accent);
-      color: var(--color-primary-dark);
+      color: #1A1A2E;
       font-weight: 700;
       font-size: var(--text-sm);
-      /* min-height 44px für Touch-Target */
       min-height: 44px;
       padding: var(--space-sm) var(--space-lg);
-      border-radius: var(--radius-full);
+      border-radius: var(--radius-md);
       transition: background var(--transition), transform var(--transition);
       white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
     }
 
     .price-bar__btn:hover {
@@ -365,8 +388,8 @@
     }
 
     .article-card:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-3px);
     }
 
     /* Produktbild */
@@ -397,7 +420,7 @@
       align-items: center;
       justify-content: center;
       gap: var(--space-sm);
-      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+      background: linear-gradient(135deg, #1A1A2E 0%, #0F3460 100%);
       color: #fff;
       font-size: var(--text-sm);
       font-weight: 600;
@@ -643,7 +666,7 @@
 
     .form-input:focus {
       border-color: var(--color-border-focus);
-      box-shadow: 0 0 0 3px rgba(45,125,70,.12);
+      box-shadow: 0 0 0 3px rgba(0,107,94,.15);
     }
 
     .form-input.invalid {
@@ -786,10 +809,11 @@
       font-size: var(--text-base);
       font-weight: 700;
       padding: 14px var(--space-xl);
-      border-radius: var(--radius-full);
+      border-radius: var(--radius-md);
       width: 100%;
       transition: background var(--transition), transform var(--transition), opacity var(--transition);
-      letter-spacing: -0.01em;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
     }
 
     .btn-primary:hover:not(:disabled) {
@@ -817,9 +841,11 @@
       font-size: var(--text-base);
       font-weight: 600;
       padding: 12px var(--space-xl);
-      border-radius: var(--radius-full);
+      border-radius: var(--radius-md);
       border: 2px solid var(--color-primary);
       transition: background var(--transition), color var(--transition);
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
     }
 
     .btn-secondary:hover {
@@ -884,6 +910,11 @@
       margin-bottom: var(--space-sm);
     }
 
+    .confirmation-wrap .section__title::after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
     .confirmation-wrap .section__subtitle {
       margin-bottom: var(--space-xl);
     }
@@ -927,7 +958,7 @@
        ============================================================ */
     @media (max-width: 480px) {
       .site-header {
-        padding: var(--space-md);
+        padding: var(--space-sm) var(--space-md);
       }
 
       .section__title {
@@ -961,15 +992,19 @@
        HEADER
        ============================================================ -->
   <header class="site-header">
-    <div class="site-header__logo">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-        <path d="M2 12 Q7 6 12 12 Q17 18 22 12" stroke="currentColor" stroke-width="2" fill="none"/>
-        <path d="M12 2 Q6 7 12 12 Q18 17 12 22" stroke="currentColor" stroke-width="2" fill="none"/>
-      </svg>
-      TSI <span>Tennisclub</span>
+    <div class="site-header__inner">
+      <div>
+        <div class="site-header__logo">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M2 12 Q7 6 12 12 Q17 18 22 12" stroke="currentColor" stroke-width="2" fill="none"/>
+            <path d="M12 2 Q6 7 12 12 Q18 17 12 22" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+          TSI <span>Tennisclub</span>
+        </div>
+        <div class="site-header__subtitle">Teamkleidung Bestellplattform</div>
+      </div>
     </div>
-    <div class="site-header__subtitle">Teamkleidung Bestellplattform</div>
   </header>
 
   <!-- ============================================================
