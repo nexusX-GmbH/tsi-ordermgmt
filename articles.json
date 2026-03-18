@@ -1,38 +1,16 @@
 [
-  {
-    "id": 1,
-    "name": "Trikot",
-    "description": "Atmungsaktives Polyester-Trikot",
-    "sizes": ["XS", "S", "M", "L", "XL", "XXL"],
-    "price": 45.00,
-    "image": "images/trikot.jpg",
-    "active": true
-  },
-  {
-    "id": 2,
-    "name": "Hose",
-    "description": "Leichte Sporthose mit Taschen",
-    "sizes": ["XS", "S", "M", "L", "XL", "XXL"],
-    "price": 35.00,
-    "image": "images/hose.jpg",
-    "active": true
-  },
-  {
-    "id": 3,
-    "name": "Socken",
-    "description": "Sportsocken im 2er-Pack",
-    "sizes": ["35-38", "39-42", "43-46"],
-    "price": 12.00,
-    "image": "images/socken.jpg",
-    "active": true
-  },
-  {
-    "id": 4,
-    "name": "Jacke",
-    "description": "Trainingsjacke mit Reißverschluss",
-    "sizes": ["XS", "S", "M", "L", "XL", "XXL"],
-    "price": 65.00,
-    "image": "images/jacke.jpg",
-    "active": true
-  }
+  {"id":1,"artikelnummer":"3MP2011","name":"Play T-Shirt","description":"black","sizes":["S","M","L","XL","XXL"],"price":23.0,"image":"images/3MP2011-Play_Crew_Neck_Tee-2000-1-Face_black.jpg","active":true},
+  {"id":2,"artikelnummer":"3MP2011","name":"Play T-Shirt","description":"orange","sizes":["S","M","L","XL","XXL"],"price":23.0,"image":"images/3MP2011-Play_Crew_Neck_Tee-2000-1-Face_orange.jpg","active":true},
+  {"id":3,"artikelnummer":"3MP2021","name":"Play Polo-Shirt","description":"black","sizes":["S","M","L","XL","XXL"],"price":26.0,"image":"images/3MP2021-Play_Polo-2000-3-Face_black.jpg","active":true},
+  {"id":4,"artikelnummer":"3MP2061","name":"Play Short","description":"white","sizes":["S","M","L","XL","XXL"],"price":24.0,"image":"images/3MP2061-Play_Short_-1000-1-Face_white.jpg","active":true},
+  {"id":5,"artikelnummer":"3MP2061","name":"Play Short","description":"black","sizes":["S","M","L","XL","XXL"],"price":24.0,"image":"images/3MP2061-Play_Short_-2000-1-Face_black.jpg","active":true},
+  {"id":6,"artikelnummer":"3MP2121","name":"Play Jacke Jogginganzug","description":"white","sizes":["S","M","L","XL","XXL"],"price":59.0,"image":"images/3MP2121-Play_Jacket_-1000-1-Face_white.jpg","active":true},
+  {"id":7,"artikelnummer":"3MP2121","name":"Play Jacke Jogginganzug","description":"black","sizes":["S","M","L","XL","XXL"],"price":59.0,"image":"images/3MP2121-Play_Jacket_-2000-1-Face_black.jpg","active":true},
+  {"id":8,"artikelnummer":"3MP2131","name":"Play Hose Jogginganzug","description":"black","sizes":["S","M","L","XL","XXL"],"price":50.0,"image":"images/3MP2131-Play_Pant_-2000-1-Face_black.jpg","active":true},
+  {"id":9,"artikelnummer":"4MP2121","name":"Exercise Jacke","description":"grey","sizes":["S","M","L","XL","XXL"],"price":46.0,"image":"images/4MP2121-Exercise_Hood_Jacket_-3002-1-Face_grey.jpg","active":true},
+  {"id":10,"artikelnummer":"4MP2131","name":"Exercise Hose","description":"grey","sizes":["S","M","L","XL","XXL"],"price":36.0,"image":"images/4MP2131-Exercise_Jogge__Pant_-3002-1-Face__grey.jpg","active":true},
+  {"id":11,"artikelnummer":"4UTF041","name":"Hoodie","description":"black","sizes":["S","M","L","XL","XXL"],"price":43.0,"image":"images/4UTF041-Exercise_Hood_Sweat-2000-1-Face_black.jpg","active":true},
+  {"id":12,"artikelnummer":"5UB1221","name":"CAP","description":"black","sizes":["ONE SIZE"],"price":15.0,"image":"images/5UB1221-PURE_LOGO_CAP-2000-1-3_4_Face_black.jpg","active":true},
+  {"id":13,"artikelnummer":"5UB1221","name":"CAP","description":"orange","sizes":["ONE SIZE"],"price":15.0,"image":"images/5UB1221-PURE_LOGO_CAP-5061-1-3_4_Face_orange.jpg","active":true},
+  {"id":14,"artikelnummer":"Socke123","name":"TC Bamberg Socken","description":"white","sizes":["36-41","42-46","46-50"],"price":0.0,"image":"images/placeholder.jpg","active":true}
 ]
