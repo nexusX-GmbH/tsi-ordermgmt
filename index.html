@@ -1319,6 +1319,7 @@
                 <thead>
                   <tr>
                     <th>Artikel</th>
+                    <th>Farbe</th>
                     <th>Größe</th>
                     <th>Stk.</th>
                     <th>Summe</th>
@@ -1811,6 +1812,7 @@
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${escapeHtml(article.name)}</td>
+          <td>${escapeHtml(article.description)}</td>
           <td>${escapeHtml(sel.groesse)}</td>
           <td>${sel.stueckzahl}</td>
           <td>${formatPrice(subtotal)}</td>`;
