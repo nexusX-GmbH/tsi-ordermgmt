@@ -423,6 +423,58 @@
       transform: scale(1.03);
     }
 
+    /* Bild-Slider */
+    .img-slider {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .img-slider__track {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.35s ease;
+      will-change: transform;
+    }
+
+    .img-slider__slide {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .img-slider__dots {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      pointer-events: none;
+    }
+
+    .img-slider__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.45);
+      border: 1px solid rgba(0, 0, 0, 0.25);
+      padding: 0;
+      cursor: pointer;
+      pointer-events: all;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .img-slider__dot--active {
+      background: var(--color-primary, #0F3460);
+      border-color: var(--color-primary, #0F3460);
+      transform: scale(1.25);
+    }
+
     /* Platzhalter wenn kein Bild */
     .article-card__placeholder {
       width: 100%;
@@ -1389,21 +1441,86 @@
       const imageWrap = document.createElement("div");
       imageWrap.className = "article-card__image-wrap";
 
-      const img = document.createElement("img");
-      img.className = "article-card__image";
-      img.alt = article.name;
-      img.src = article.image;
+      const imageList = article.images && article.images.length > 1 ? article.images : null;
 
-      // Fallback: farbiger Platzhalter mit Artikelname wenn Bild nicht lädt
-      img.addEventListener("error", () => {
-        imageWrap.innerHTML = `
-          <div class="article-card__placeholder" aria-label="${article.name} \u2013 Produktfoto folgt">
-            <span class="article-card__placeholder-icon" aria-hidden="true">\uD83C\uDFBE</span>
-            <span>${article.name}</span>
-          </div>`;
-      });
+      if (imageList) {
+        // Bild-Slider für Artikel mit mehreren Bildern
+        let currentIndex = 0;
 
-      imageWrap.appendChild(img);
+        const slider = document.createElement("div");
+        slider.className = "img-slider";
+
+        const track = document.createElement("div");
+        track.className = "img-slider__track";
+
+        const altLabels = ["Vorderansicht", "Rückansicht"];
+        imageList.forEach((src, i) => {
+          const slide = document.createElement("img");
+          slide.className = "img-slider__slide";
+          slide.alt = `${article.name} – ${altLabels[i] || "Ansicht " + (i + 1)}`;
+          slide.src = src;
+          track.appendChild(slide);
+        });
+
+        const dots = document.createElement("div");
+        dots.className = "img-slider__dots";
+
+        function goTo(index) {
+          currentIndex = index;
+          track.style.transform = `translateX(-${index * 100}%)`;
+          dots.querySelectorAll(".img-slider__dot").forEach((d, i) => {
+            d.classList.toggle("img-slider__dot--active", i === index);
+          });
+        }
+
+        imageList.forEach((_, i) => {
+          const dot = document.createElement("button");
+          dot.className = "img-slider__dot" + (i === 0 ? " img-slider__dot--active" : "");
+          dot.type = "button";
+          dot.setAttribute("aria-label", `Bild ${i + 1}`);
+          dot.addEventListener("click", (e) => { e.stopPropagation(); goTo(i); });
+          dots.appendChild(dot);
+        });
+
+        // Klick auf Bild → nächstes Bild
+        slider.addEventListener("click", () => {
+          goTo((currentIndex + 1) % imageList.length);
+        });
+
+        // Touch-Swipe
+        let touchStartX = 0;
+        slider.addEventListener("touchstart", (e) => {
+          touchStartX = e.touches[0].clientX;
+        }, { passive: true });
+        slider.addEventListener("touchend", (e) => {
+          const diff = touchStartX - e.changedTouches[0].clientX;
+          if (Math.abs(diff) > 30) {
+            goTo(diff > 0
+              ? Math.min(currentIndex + 1, imageList.length - 1)
+              : Math.max(currentIndex - 1, 0));
+          }
+        });
+
+        slider.appendChild(track);
+        slider.appendChild(dots);
+        imageWrap.appendChild(slider);
+      } else {
+        // Einzelbild
+        const img = document.createElement("img");
+        img.className = "article-card__image";
+        img.alt = article.name;
+        img.src = article.image;
+
+        img.addEventListener("error", () => {
+          imageWrap.innerHTML = `
+            <div class="article-card__placeholder" aria-label="${article.name} \u2013 Produktfoto folgt">
+              <span class="article-card__placeholder-icon" aria-hidden="true">\uD83C\uDFBE</span>
+              <span>${article.name}</span>
+            </div>`;
+        });
+
+        imageWrap.appendChild(img);
+      }
 
       // --- Karteninhalt ---
       const body = document.createElement("div");
