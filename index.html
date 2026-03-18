@@ -1871,6 +1871,7 @@
       const artikelPayload = orderedItems.map(article => {
         const sel = state.selections[article.id];
         return {
+          artikelnummer: article.artikelnummer,
           name:          article.name,
           farbe:         article.description,
           groesse:       sel.groesse,
