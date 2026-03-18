@@ -12,5 +12,5 @@
   {"id":11,"artikelnummer":"4UTF041","name":"Hoodie","description":"black","sizes":["S","M","L","XL","XXL"],"price":43.0,"image":"images/4UTF041-Exercise_Hood_Sweat-2000-1-Face_black.jpg","active":true},
   {"id":12,"artikelnummer":"5UB1221","name":"CAP","description":"black","sizes":["ONE SIZE"],"price":15.0,"image":"images/5UB1221-PURE_LOGO_CAP-2000-1-3_4_Face_black.jpg","active":true},
   {"id":13,"artikelnummer":"5UB1221","name":"CAP","description":"orange","sizes":["ONE SIZE"],"price":15.0,"image":"images/5UB1221-PURE_LOGO_CAP-5061-1-3_4_Face_orange.jpg","active":true},
-  {"id":14,"artikelnummer":"Socke123","name":"TC Bamberg Socken","description":"white","sizes":["36-41","42-46","46-50"],"price":0.0,"image":"images/placeholder.jpg","active":true}
+  {"id":14,"artikelnummer":"Socke123","name":"TC Bamberg Socken","description":"white","sizes":["36-41","42-46","46-50"],"price":15.0,"image":"images/placeholder.jpg","active":true}
 ]
