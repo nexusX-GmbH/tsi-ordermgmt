@@ -747,6 +747,68 @@
       display: block;
     }
 
+    /* Telefon-Zeile: Länderkennung + Nummer */
+    .tel-row {
+      display: flex;
+      gap: var(--space-sm);
+    }
+
+    .tel-row select {
+      flex: 0 0 auto;
+      width: 96px;
+      padding: 10px var(--space-sm);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-base);
+      color: var(--color-text);
+      background: var(--color-surface);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .tel-row select:focus {
+      border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 3px rgba(0,107,94,.15);
+    }
+
+    .tel-row .form-input {
+      flex: 1;
+    }
+
+    /* PayPal-Button in Bestätigung */
+    .paypal-section {
+      margin-top: var(--space-xl);
+      padding: var(--space-lg);
+      background: #fef9f0;
+      border: 1.5px solid #f0a830;
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+
+    .paypal-section__label {
+      font-size: var(--text-sm);
+      color: var(--color-text-2);
+      margin-bottom: var(--space-md);
+    }
+
+    .btn-paypal {
+      display: inline-block;
+      background: #ffc439;
+      color: #003087;
+      font-weight: 700;
+      font-size: var(--text-base);
+      padding: 12px var(--space-xl);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-paypal:hover {
+      background: #f0a830;
+      transform: translateY(-1px);
+    }
+
     /* Zusammenfassungs-Karte */
     .summary-card {
       background: var(--color-surface);
@@ -1169,19 +1231,48 @@
               <label class="form-label" for="input-telefon">
                 Telefonnummer <span class="required" aria-hidden="true">*</span>
               </label>
+              <div class="tel-row">
+                <select id="select-landeskennung" name="landeskennung" aria-label="Länderkennung" autocomplete="tel-country-code">
+                  <option value="+49">🇩🇪 +49</option>
+                  <option value="+43">🇦🇹 +43</option>
+                  <option value="+41">🇨🇭 +41</option>
+                  <option value="+39">🇮🇹 +39</option>
+                  <option value="+33">🇫🇷 +33</option>
+                  <option value="+1">🇺🇸 +1</option>
+                </select>
+                <input
+                  class="form-input"
+                  type="tel"
+                  id="input-telefon"
+                  name="telefon"
+                  autocomplete="tel-national"
+                  placeholder="z.&nbsp;B. 171 1234567"
+                  required
+                  aria-required="true"
+                  aria-describedby="error-telefon"
+                  aria-invalid="false"
+                />
+              </div>
+              <span class="form-error" id="error-telefon" role="alert" aria-live="assertive">Bitte gib eine gültige Telefonnummer ein.</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="input-email">
+                E-Mail-Adresse <span class="required" aria-hidden="true">*</span>
+              </label>
               <input
                 class="form-input"
-                type="tel"
-                id="input-telefon"
-                name="telefon"
-                autocomplete="tel"
-                placeholder="z.&nbsp;B. 0171 1234567"
+                type="email"
+                id="input-email"
+                name="email"
+                autocomplete="email"
+                placeholder="z.&nbsp;B. max.mustermann@example.de"
                 required
                 aria-required="true"
-                aria-describedby="error-telefon"
+                aria-describedby="error-email"
                 aria-invalid="false"
               />
-              <span class="form-error" id="error-telefon" role="alert" aria-live="assertive">Bitte gib eine gültige Telefonnummer ein.</span>
+              <span class="form-error" id="error-email" role="alert" aria-live="assertive">Bitte gib eine gültige E-Mail-Adresse ein.</span>
             </div>
           </div>
 
@@ -1260,6 +1351,13 @@
               <span class="summary-table__total-label">Gesamtsumme</span>
               <span class="summary-table__total-amount" id="confirmation-total"></span>
             </div>
+
+            <div class="paypal-section">
+              <p class="paypal-section__label">Bitte überweise den Betrag per PayPal:</p>
+              <a class="btn-paypal" id="paypal-link" href="#" target="_blank" rel="noopener">
+                Jetzt per PayPal bezahlen
+              </a>
+            </div>
           </div>
 
           <button class="btn-secondary" id="btn-new-order" type="button">
@@ -1293,6 +1391,7 @@
        KONFIGURATION
        ---------------------------------------------------------- */
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwMrg9GUqrbAgilV47v6Afwb9lEeMSCOnmaTiQC9pPtDmwgcoXuQGo1hfMubVhlSmecfA/exec";
+    const PAYPAL_BUSINESS   = "t.simon1977@googlemail.com";
 
     /* ----------------------------------------------------------
        ANWENDUNGSZUSTAND
@@ -1710,9 +1809,10 @@
     function validateContactForm() {
       const vornameOk  = validateField("input-vorname",  "error-vorname",  v => v.length >= 2);
       const nachnameOk = validateField("input-nachname", "error-nachname", v => v.length >= 2);
-      const telefonOk  = validateField("input-telefon",  "error-telefon",  v => v.length >= 6 && /^[\d\s\+\-\/\(\)]+$/.test(v));
+      const telefonOk  = validateField("input-telefon",  "error-telefon",  v => v.length >= 4 && /^[\d\s\-\/\(\)]+$/.test(v));
+      const emailOk    = validateField("input-email",    "error-email",    v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v));
 
-      return vornameOk && nachnameOk && telefonOk;
+      return vornameOk && nachnameOk && telefonOk && emailOk;
     }
 
     /* ----------------------------------------------------------
@@ -1723,9 +1823,11 @@
     async function submitOrder() {
       if (!validateContactForm()) return;
 
-      const vorname  = document.getElementById("input-vorname").value.trim();
-      const nachname = document.getElementById("input-nachname").value.trim();
-      const telefon  = document.getElementById("input-telefon").value.trim();
+      const vorname        = document.getElementById("input-vorname").value.trim();
+      const nachname       = document.getElementById("input-nachname").value.trim();
+      const landeskennung  = document.getElementById("select-landeskennung").value;
+      const telefon        = landeskennung + " " + document.getElementById("input-telefon").value.trim();
+      const email          = document.getElementById("input-email").value.trim();
 
       const orderedItems = getOrderedItems();
 
@@ -1747,6 +1849,7 @@
         vorname,
         nachname,
         telefon,
+        email,
         artikel:      artikelPayload,
         gesamtsumme:  calcTotal(),
       };
@@ -1770,7 +1873,7 @@
         });
 
         // Erfolg – Bestätigung anzeigen
-        showConfirmation(vorname, nachname, artikelPayload, calcTotal());
+        showConfirmation(vorname, nachname, email, artikelPayload, calcTotal());
 
       } catch (_err) {
         // Fehler anzeigen, Button wieder freigeben
@@ -1787,10 +1890,15 @@
        BESTÄTIGUNGSSEITE
        ---------------------------------------------------------- */
 
-    function showConfirmation(vorname, nachname, artikel, gesamtsumme) {
+    function showConfirmation(vorname, nachname, email, artikel, gesamtsumme) {
       // Personalisierte Nachricht
       document.getElementById("confirmation-subtitle").textContent =
-        `Wir haben deine Bestellung erhalten, ${vorname}. Du wirst bei Fragen unter deiner angegebenen Telefonnummer kontaktiert.`;
+        `Wir haben deine Bestellung erhalten, ${vorname}. Eine Bestätigung wurde an ${email} gesendet.`;
+
+      // PayPal-Link mit Betrag befüllen
+      const betrag = gesamtsumme.toFixed(2);
+      const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(PAYPAL_BUSINESS)}&amount=${betrag}&currency_code=EUR&item_name=${encodeURIComponent("TC Bamberg Teamkleidung")}`;
+      document.getElementById("paypal-link").href = paypalUrl;
 
       document.getElementById("confirmation-name").textContent =
         `${vorname} ${nachname}`;
