@@ -1371,6 +1371,7 @@
                 <thead>
                   <tr>
                     <th>Artikel</th>
+                    <th>Farbe</th>
                     <th>Größe</th>
                     <th>Stk.</th>
                     <th>Summe</th>
@@ -1946,6 +1947,7 @@
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${escapeHtml(item.name)}</td>
+          <td>${escapeHtml(item.farbe)}</td>
           <td>${escapeHtml(item.groesse)}</td>
           <td>${item.stueckzahl}</td>
           <td>${formatPrice(item.zwischensumme)}</td>`;
