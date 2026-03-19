@@ -1733,7 +1733,7 @@
       const subtitleHtml = article.subtitle
         ? ` <span class="article-card__subtitle">(${escapeHtml(article.subtitle)})</span>`
         : "";
-      const tcbLogoHtml = article.allowsInitials
+      const tcbLogoHtml = (article.allowsInitials || article.hasTcbLogo)
         ? `<div class="article-card__tcb-logo">inkl. TCB Logo</div>`
         : "";
       body.innerHTML = `
