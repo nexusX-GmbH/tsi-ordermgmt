@@ -1094,6 +1094,51 @@
       height: 80px;
     }
 
+    /* Artikelkarten-Untertitel (z. B. Spieltrikot) */
+    .article-card__subtitle {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      font-weight: normal;
+      margin-left: 0.3rem;
+    }
+
+    /* Initialen-Eingabe */
+    .initialen-row {
+      margin-top: var(--space-sm);
+    }
+    .initialen-row__label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-text);
+      margin-bottom: 0.3rem;
+    }
+    .initialen-row__input-wrap {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    .initialen-input {
+      width: 3.5rem;
+      padding: 0.35rem 0.5rem;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-base);
+      text-transform: uppercase;
+      text-align: center;
+      font-family: inherit;
+    }
+    .initialen-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 15%, transparent);
+    }
+    .initialen-info {
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      white-space: nowrap;
+    }
+
     /* ============================================================
        UTILITIES
        ============================================================ */
@@ -1323,6 +1368,7 @@
                     <th>Farbe</th>
                     <th>Größe</th>
                     <th>Stk.</th>
+                    <th>Initialen</th>
                     <th>Summe</th>
                   </tr>
                 </thead>
@@ -1376,6 +1422,7 @@
                     <th>Farbe</th>
                     <th>Größe</th>
                     <th>Stk.</th>
+                    <th>Initialen</th>
                     <th>Summe</th>
                   </tr>
                 </thead>
@@ -1427,8 +1474,9 @@
     /* ----------------------------------------------------------
        KONFIGURATION
        ---------------------------------------------------------- */
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxr7yX3hS-BGKLy81JEgBwIyCid0qPVfdVGc6dc06HRSs8abW6_D6Ar3fnSb-Mus1sBfg/exec";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbweXCp3E9hLy9PRAU-KCXw2JF33O7E1hpmo4vclEaHWdkHkdHlxL3s-wjyB7VZ7DqebHA/exec";
     const PAYPAL_BUSINESS   = "t.simon1977@googlemail.com";
+    const INITIALEN_PREIS   = 3; // € pro Stück mit Initialen
 
     /* ----------------------------------------------------------
        ANWENDUNGSZUSTAND
@@ -1460,12 +1508,18 @@
       });
     }
 
+    /** Berechnet die Zwischensumme eines Artikels inkl. optionalem Initialen-Aufpreis */
+    function calcItemSubtotal(article) {
+      const sel = state.selections[article.id];
+      if (!sel || sel.stueckzahl === 0) return 0;
+      const initCost = (article.allowsInitials && sel.initialen) ? INITIALEN_PREIS : 0;
+      return (article.price + initCost) * sel.stueckzahl;
+    }
+
     /** Berechnet die Gesamtsumme aller ausgewählten Artikel */
     function calcTotal() {
       return state.articles.reduce((sum, article) => {
-        const sel = state.selections[article.id];
-        if (!sel || sel.stueckzahl === 0) return sum;
-        return sum + article.price * sel.stueckzahl;
+        return sum + calcItemSubtotal(article);
       }, 0);
     }
 
@@ -1538,7 +1592,7 @@
 
         // Initialzustand für alle Artikel anlegen
         state.articles.forEach(article => {
-          state.selections[article.id] = { groesse: null, stueckzahl: 0 };
+          state.selections[article.id] = { groesse: null, stueckzahl: 0, initialen: "" };
         });
 
         renderCatalog(contentEl);
@@ -1663,9 +1717,12 @@
       body.className = "article-card__body";
 
       // Name & Preis
+      const subtitleHtml = article.subtitle
+        ? ` <span class="article-card__subtitle">(${escapeHtml(article.subtitle)})</span>`
+        : "";
       body.innerHTML = `
         <div class="article-card__header">
-          <h2 class="article-card__name">${escapeHtml(article.name)}</h2>
+          <h2 class="article-card__name">${escapeHtml(article.name)}${subtitleHtml}</h2>
           <div class="article-card__price">${formatPrice(article.price)}</div>
         </div>
         <p class="article-card__desc">${escapeHtml(article.description)}</p>`;
@@ -1722,6 +1779,26 @@
 
       body.appendChild(sizeSection);
       body.appendChild(qtyRow);
+
+      // Initialen-Eingabe (nur für Artikel mit allowsInitials)
+      if (article.allowsInitials) {
+        const initiaienRow = document.createElement("div");
+        initiaienRow.className = "initialen-row";
+        initiaienRow.innerHTML = `
+          <label class="initialen-row__label" for="initialen-${article.id}">Initialen</label>
+          <div class="initialen-row__input-wrap">
+            <input class="initialen-input" type="text" id="initialen-${article.id}"
+                   maxlength="2" placeholder="z.\u00a0B.\u00a0AB" autocomplete="off">
+            <span class="initialen-info">+ 3\u00a0€ pro St\u00fcck</span>
+          </div>`;
+        initiaienRow.querySelector(".initialen-input").addEventListener("input", function () {
+          const cleaned = this.value.toUpperCase().replace(/[^A-Z]/g, "");
+          if (this.value !== cleaned) this.value = cleaned;
+          onInitialenChange(article.id, cleaned);
+        });
+        body.appendChild(initiaienRow);
+      }
+
       body.appendChild(subtotalEl);
 
       card.appendChild(imageWrap);
@@ -1764,7 +1841,7 @@
 
       qtyEl.textContent = newQty;
 
-      const subtotal = article.price * newQty;
+      const subtotal = calcItemSubtotal(article);
       subtotalEl.textContent = formatPrice(subtotal);
       subtotalEl.classList.toggle("zero", newQty === 0);
 
@@ -1772,6 +1849,17 @@
       card.querySelector(".qty-minus").disabled = newQty <= 0;
       card.querySelector(".qty-plus").disabled  = newQty >= 10;
 
+      updatePriceBar();
+    }
+
+    /** Behandelt Eingabe im Initialen-Feld */
+    function onInitialenChange(articleId, value) {
+      state.selections[articleId].initialen = value;
+      const article = state.articles.find(a => a.id === articleId);
+      const subtotalEl = document.getElementById(`subtotal-${articleId}`);
+      if (subtotalEl) {
+        subtotalEl.textContent = formatPrice(calcItemSubtotal(article));
+      }
       updatePriceBar();
     }
 
@@ -1809,13 +1897,15 @@
 
       getOrderedItems().forEach(article => {
         const sel = state.selections[article.id];
-        const subtotal = article.price * sel.stueckzahl;
+        const subtotal = calcItemSubtotal(article);
+        const initText = (article.allowsInitials && sel.initialen) ? sel.initialen : "–";
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${escapeHtml(article.name)}</td>
           <td>${escapeHtml(article.description)}</td>
           <td>${escapeHtml(sel.groesse)}</td>
           <td>${sel.stueckzahl}</td>
+          <td>${escapeHtml(initText)}</td>
           <td>${formatPrice(subtotal)}</td>`;
         tbody.appendChild(tr);
       });
@@ -1874,14 +1964,17 @@
 
       const artikelPayload = orderedItems.map(article => {
         const sel = state.selections[article.id];
+        const initCost = (article.allowsInitials && sel.initialen) ? INITIALEN_PREIS * sel.stueckzahl : 0;
         return {
-          artikelnummer: article.artikelnummer,
-          name:          article.name,
-          farbe:         article.description,
-          groesse:       sel.groesse,
-          stueckzahl:    sel.stueckzahl,
-          einzelpreis:   article.price,
-          zwischensumme: article.price * sel.stueckzahl,
+          artikelnummer:      article.artikelnummer,
+          name:               article.name,
+          farbe:              article.description,
+          groesse:            sel.groesse,
+          initialen:          sel.initialen || "",
+          stueckzahl:         sel.stueckzahl,
+          einzelpreis:        article.price,
+          initialen_aufpreis: initCost,
+          zwischensumme:      calcItemSubtotal(article),
         };
       });
 
@@ -1947,12 +2040,14 @@
       const tbody = document.getElementById("confirmation-table-body");
       tbody.innerHTML = "";
       artikel.forEach(item => {
+        const initText = item.initialen || "–";
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${escapeHtml(item.name)}</td>
           <td>${escapeHtml(item.farbe)}</td>
           <td>${escapeHtml(item.groesse)}</td>
           <td>${item.stueckzahl}</td>
+          <td>${escapeHtml(initText)}</td>
           <td>${formatPrice(item.zwischensumme)}</td>`;
         tbody.appendChild(tr);
       });
@@ -1969,7 +2064,7 @@
     function resetApp() {
       // Zustand zurücksetzen
       state.articles.forEach(article => {
-        state.selections[article.id] = { groesse: null, stueckzahl: 0 };
+        state.selections[article.id] = { groesse: null, stueckzahl: 0, initialen: "" };
       });
 
       // Formulare leeren
@@ -2003,6 +2098,9 @@
             subtotalEl.textContent = "0,00\u00a0€";
             subtotalEl.classList.add("zero");
           }
+
+          const initInput = document.getElementById(`initialen-${article.id}`);
+          if (initInput) initInput.value = "";
 
           card.querySelector(".qty-minus").disabled = true;
           card.querySelector(".qty-plus").disabled  = false;
