@@ -1094,6 +1094,19 @@
       height: 80px;
     }
 
+    /* Preis-Bereich mit TCB-Logo-Hinweis */
+    .article-card__price-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .article-card__tcb-logo {
+      font-size: var(--text-xs, 0.75rem);
+      color: var(--color-primary);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
     /* Artikelkarten-Untertitel (z. B. Spieltrikot) */
     .article-card__subtitle {
       font-size: var(--text-sm);
@@ -1643,7 +1656,7 @@
         const track = document.createElement("div");
         track.className = "img-slider__track";
 
-        const altLabels = ["Vorderansicht", "Rückansicht"];
+        const altLabels = ["Vorderansicht", "Rückansicht", "Mit TCB Logo"];
         imageList.forEach((src, i) => {
           const slide = document.createElement("img");
           slide.className = "img-slider__slide";
@@ -1720,10 +1733,16 @@
       const subtitleHtml = article.subtitle
         ? ` <span class="article-card__subtitle">(${escapeHtml(article.subtitle)})</span>`
         : "";
+      const tcbLogoHtml = article.allowsInitials
+        ? `<div class="article-card__tcb-logo">inkl. TCB Logo</div>`
+        : "";
       body.innerHTML = `
         <div class="article-card__header">
           <h2 class="article-card__name">${escapeHtml(article.name)}${subtitleHtml}</h2>
-          <div class="article-card__price">${formatPrice(article.price)}</div>
+          <div class="article-card__price-wrap">
+            <div class="article-card__price">${formatPrice(article.price)}</div>
+            ${tcbLogoHtml}
+          </div>
         </div>
         <p class="article-card__desc">${escapeHtml(article.description)}</p>`;
 
