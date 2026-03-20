@@ -188,7 +188,7 @@
     }
 
     .site-header__sponsor-logo {
-      height: 36px;
+      height: 54px;
       width: auto;
       object-fit: contain;
       background: #fff;
@@ -1538,15 +1538,11 @@
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbweXCp3E9hLy9PRAU-KCXw2JF33O7E1hpmo4vclEaHWdkHkdHlxL3s-wjyB7VZ7DqebHA/exec";
     const PAYPAL_BUSINESS   = "t.simon1977@googlemail.com";
     const INITIALEN_PREIS   = 3; // € pro Stück mit Initialen
-    const SPONSORED_IDS     = [1, 3]; // Reihenfolge = Priorität: ID 1 ist zuerst kostenlos
+    const SPONSORED_IDS     = [1, 3];
 
-    /** Gibt die ID des ersten gesponserten Artikels zurück, der bestellt wird (= kostenloser) */
+    /** Gibt die ID des zuerst ausgewählten gesponserten Artikels zurück (= kostenloser) */
     function getSponsoredFreeId() {
-      for (const id of SPONSORED_IDS) {
-        const sel = state.selections[id];
-        if (sel && sel.stueckzahl > 0) return id;
-      }
-      return null;
+      return state.sponsoredOrder[0] ?? null;
     }
 
     /** Aktualisiert Preisanzeige und Zwischensumme der gesponserten Artikel */
@@ -1574,6 +1570,7 @@
       articles: [],          // Geladene Artikel aus articles.json
       selections: {},        /* Auswahl je Artikel-ID:
                                 { groesse: string|null, stueckzahl: number } */
+      sponsoredOrder: [],    // Reihenfolge der Auswahl der gesponserten Artikel [id, ...]
     };
 
     /* ----------------------------------------------------------
@@ -1953,7 +1950,15 @@
       card.querySelector(".qty-minus").disabled = newQty <= 0;
       card.querySelector(".qty-plus").disabled  = newQty >= maxQty;
 
-      if (SPONSORED_IDS.includes(articleId)) updateSponsoredPrices();
+      if (SPONSORED_IDS.includes(articleId)) {
+        // Auswahlreihenfolge tracken: wer zuerst gewählt wird, bleibt kostenlos
+        if (newQty > 0 && !state.sponsoredOrder.includes(articleId)) {
+          state.sponsoredOrder.push(articleId);
+        } else if (newQty === 0) {
+          state.sponsoredOrder = state.sponsoredOrder.filter(id => id !== articleId);
+        }
+        updateSponsoredPrices();
+      }
       updatePriceBar();
     }
 
