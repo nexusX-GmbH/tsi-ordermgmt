@@ -1540,14 +1540,8 @@
     const INITIALEN_PREIS   = 3; // € pro Stück mit Initialen
     const SPONSORED_IDS     = [1, 3];
 
-    /** Gibt die ID des zuerst ausgewählten gesponserten Artikels zurück (= kostenloser) */
-    function getSponsoredFreeId() {
-      return state.sponsoredOrder[0] ?? null;
-    }
-
-    /** Aktualisiert Preisanzeige und Zwischensumme der gesponserten Artikel */
+    /** Aktualisiert Zwischensumme der gesponserten Artikel */
     function updateSponsoredPrices() {
-      const freeId = getSponsoredFreeId();
       SPONSORED_IDS.forEach(id => {
         const article = state.articles.find(a => a.id === id);
         if (!article) return;
@@ -1570,7 +1564,6 @@
       articles: [],          // Geladene Artikel aus articles.json
       selections: {},        /* Auswahl je Artikel-ID:
                                 { groesse: string|null, stueckzahl: number } */
-      sponsoredOrder: [],    // Reihenfolge der Auswahl der gesponserten Artikel [id, ...]
     };
 
     /* ----------------------------------------------------------
@@ -1598,9 +1591,9 @@
       const sel = state.selections[article.id];
       if (!sel || sel.stueckzahl === 0) return 0;
       const initCost = (article.allowsInitials && sel.initialen) ? INITIALEN_PREIS : 0;
-      // Gesponserter Artikel: genau 1 Stück ist kostenlos, weitere zum Normalpreis
-      if (article.sponsored && getSponsoredFreeId() === article.id) {
-        return Math.max(0, sel.stueckzahl - 1) * article.price + initCost * sel.stueckzahl;
+      // Gesponserter Artikel: immer kostenlos, nur Initialen werden berechnet
+      if (article.sponsored) {
+        return initCost * sel.stueckzahl;
       }
       return (article.price + initCost) * sel.stueckzahl;
     }
@@ -1950,15 +1943,7 @@
       card.querySelector(".qty-minus").disabled = newQty <= 0;
       card.querySelector(".qty-plus").disabled  = newQty >= maxQty;
 
-      if (SPONSORED_IDS.includes(articleId)) {
-        // Auswahlreihenfolge tracken: wer zuerst gewählt wird, bleibt kostenlos
-        if (newQty > 0 && !state.sponsoredOrder.includes(articleId)) {
-          state.sponsoredOrder.push(articleId);
-        } else if (newQty === 0) {
-          state.sponsoredOrder = state.sponsoredOrder.filter(id => id !== articleId);
-        }
-        updateSponsoredPrices();
-      }
+      if (SPONSORED_IDS.includes(articleId)) updateSponsoredPrices();
       updatePriceBar();
     }
 
@@ -2078,7 +2063,7 @@
 
       const artikelPayload = orderedItems.map(article => {
         const sel = state.selections[article.id];
-        const isSponsoredFree = article.sponsored && getSponsoredFreeId() === article.id;
+        const isSponsoredFree = !!article.sponsored;
         const initCost = (article.allowsInitials && sel.initialen) ? INITIALEN_PREIS * sel.stueckzahl : 0;
         return {
           artikelnummer:      article.artikelnummer,
