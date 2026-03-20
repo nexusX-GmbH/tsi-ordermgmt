@@ -2009,7 +2009,7 @@
         const initText = (article.allowsInitials && sel.initialen) ? sel.initialen : "–";
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${escapeHtml(article.name)}</td>
+          <td>${escapeHtml(article.name + (article.sponsored ? ' (gesponsert)' : ''))}</td>
           <td>${escapeHtml(article.description)}</td>
           <td>${escapeHtml(sel.groesse)}</td>
           <td>${sel.stueckzahl}</td>
@@ -2076,7 +2076,7 @@
         const initCost = (article.allowsInitials && sel.initialen) ? INITIALEN_PREIS * sel.stueckzahl : 0;
         return {
           artikelnummer:      article.artikelnummer,
-          name:               article.name,
+          name:               article.name + (article.sponsored ? ' (gesponsert)' : ''),
           farbe:              article.description,
           groesse:            sel.groesse,
           initialen:          sel.initialen || "",
