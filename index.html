@@ -1647,7 +1647,11 @@
       amountEl.textContent = formatPrice(total);
 
       // Leiste nur einblenden wenn: in Katalog UND Gesamtsumme > 0
-      bar.classList.toggle("visible", inCatalog && total > 0);
+      const hasItems = state.articles.some(a => {
+        const sel = state.selections[a.id];
+        return sel && sel.stueckzahl > 0;
+      });
+      bar.classList.toggle("visible", inCatalog && hasItems);
     }
 
     /* ----------------------------------------------------------
