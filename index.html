@@ -1516,10 +1516,7 @@
       SPONSORED_IDS.forEach(id => {
         const article = state.articles.find(a => a.id === id);
         if (!article) return;
-        const priceEl = document.getElementById(`price-display-${id}`);
-        if (priceEl) {
-          priceEl.textContent = (freeId === id) ? '0,00\u00a0€' : formatPrice(article.price);
-        }
+        // Preis im Header bleibt immer der Normalpreis; Rabatt sieht man in der Zwischensumme
         const subtotalEl = document.getElementById(`subtotal-${id}`);
         if (subtotalEl) {
           const subtotal = calcItemSubtotal(article);
@@ -1565,9 +1562,9 @@
       const sel = state.selections[article.id];
       if (!sel || sel.stueckzahl === 0) return 0;
       const initCost = (article.allowsInitials && sel.initialen) ? INITIALEN_PREIS : 0;
-      // Gesponserter Artikel: der erste bestellte der beiden ist kostenlos (nur Initialen werden berechnet)
+      // Gesponserter Artikel: genau 1 Stück ist kostenlos, weitere zum Normalpreis
       if (article.sponsored && getSponsoredFreeId() === article.id) {
-        return initCost * sel.stueckzahl;
+        return Math.max(0, sel.stueckzahl - 1) * article.price + initCost * sel.stueckzahl;
       }
       return (article.price + initCost) * sel.stueckzahl;
     }
@@ -2037,7 +2034,6 @@
       const artikelPayload = orderedItems.map(article => {
         const sel = state.selections[article.id];
         const isSponsoredFree = article.sponsored && getSponsoredFreeId() === article.id;
-        const effektiverPreis = isSponsoredFree ? 0 : article.price;
         const initCost = (article.allowsInitials && sel.initialen) ? INITIALEN_PREIS * sel.stueckzahl : 0;
         return {
           artikelnummer:      article.artikelnummer,
@@ -2046,7 +2042,7 @@
           groesse:            sel.groesse,
           initialen:          sel.initialen || "",
           stueckzahl:         sel.stueckzahl,
-          einzelpreis:        effektiverPreis,
+          einzelpreis:        article.price,
           initialen_aufpreis: initCost,
           zwischensumme:      calcItemSubtotal(article),
           gesponsert:         isSponsoredFree,
