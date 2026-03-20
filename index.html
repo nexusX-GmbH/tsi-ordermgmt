@@ -1107,6 +1107,15 @@
       white-space: nowrap;
     }
 
+    /* Sponsor-Hinweis unter dem Preis */
+    .article-card__sponsor {
+      font-size: var(--text-xs, 0.75rem);
+      color: var(--color-primary);
+      font-style: italic;
+      margin: 6px 0 0;
+      text-align: center;
+    }
+
     /* Artikelkarten-Untertitel (z. B. Spieltrikot) */
     .article-card__subtitle {
       font-size: var(--text-sm);
@@ -1490,6 +1499,36 @@
     const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbweXCp3E9hLy9PRAU-KCXw2JF33O7E1hpmo4vclEaHWdkHkdHlxL3s-wjyB7VZ7DqebHA/exec";
     const PAYPAL_BUSINESS   = "t.simon1977@googlemail.com";
     const INITIALEN_PREIS   = 3; // € pro Stück mit Initialen
+    const SPONSORED_IDS     = [1, 3]; // Reihenfolge = Priorität: ID 1 ist zuerst kostenlos
+
+    /** Gibt die ID des ersten gesponserten Artikels zurück, der bestellt wird (= kostenloser) */
+    function getSponsoredFreeId() {
+      for (const id of SPONSORED_IDS) {
+        const sel = state.selections[id];
+        if (sel && sel.stueckzahl > 0) return id;
+      }
+      return null;
+    }
+
+    /** Aktualisiert Preisanzeige und Zwischensumme der gesponserten Artikel */
+    function updateSponsoredPrices() {
+      const freeId = getSponsoredFreeId();
+      SPONSORED_IDS.forEach(id => {
+        const article = state.articles.find(a => a.id === id);
+        if (!article) return;
+        const priceEl = document.getElementById(`price-display-${id}`);
+        if (priceEl) {
+          priceEl.textContent = (freeId === id) ? '0,00\u00a0€' : formatPrice(article.price);
+        }
+        const subtotalEl = document.getElementById(`subtotal-${id}`);
+        if (subtotalEl) {
+          const subtotal = calcItemSubtotal(article);
+          const sel = state.selections[id];
+          subtotalEl.textContent = formatPrice(subtotal);
+          subtotalEl.classList.toggle("zero", !sel || sel.stueckzahl === 0);
+        }
+      });
+    }
 
     /* ----------------------------------------------------------
        ANWENDUNGSZUSTAND
@@ -1526,6 +1565,10 @@
       const sel = state.selections[article.id];
       if (!sel || sel.stueckzahl === 0) return 0;
       const initCost = (article.allowsInitials && sel.initialen) ? INITIALEN_PREIS : 0;
+      // Gesponserter Artikel: der erste bestellte der beiden ist kostenlos (nur Initialen werden berechnet)
+      if (article.sponsored && getSponsoredFreeId() === article.id) {
+        return initCost * sel.stueckzahl;
+      }
       return (article.price + initCost) * sel.stueckzahl;
     }
 
@@ -1736,15 +1779,20 @@
       const tcbLogoHtml = (article.allowsInitials || article.hasTcbLogo)
         ? `<div class="article-card__tcb-logo">inkl. TCB Logo</div>`
         : "";
+      const sponsorHtml = article.sponsorText
+        ? `<p class="article-card__sponsor">${escapeHtml(article.sponsorText)}</p>`
+        : "";
+      const priceId = article.sponsored ? ` id="price-display-${article.id}"` : "";
       body.innerHTML = `
         <div class="article-card__header">
           <h2 class="article-card__name">${escapeHtml(article.name)}${subtitleHtml}</h2>
           <div class="article-card__price-wrap">
-            <div class="article-card__price">${formatPrice(article.price)}</div>
+            <div class="article-card__price"${priceId}>${formatPrice(article.price)}</div>
             ${tcbLogoHtml}
           </div>
         </div>
-        <p class="article-card__desc">${escapeHtml(article.description)}</p>`;
+        <p class="article-card__desc">${escapeHtml(article.description)}</p>
+        ${sponsorHtml}`;
 
       // Größenauswahl
       const sizeSection = document.createElement("div");
@@ -1868,6 +1916,7 @@
       card.querySelector(".qty-minus").disabled = newQty <= 0;
       card.querySelector(".qty-plus").disabled  = newQty >= 10;
 
+      if (SPONSORED_IDS.includes(articleId)) updateSponsoredPrices();
       updatePriceBar();
     }
 
@@ -1875,9 +1924,13 @@
     function onInitialenChange(articleId, value) {
       state.selections[articleId].initialen = value;
       const article = state.articles.find(a => a.id === articleId);
-      const subtotalEl = document.getElementById(`subtotal-${articleId}`);
-      if (subtotalEl) {
-        subtotalEl.textContent = formatPrice(calcItemSubtotal(article));
+      if (SPONSORED_IDS.includes(articleId)) {
+        updateSponsoredPrices();
+      } else {
+        const subtotalEl = document.getElementById(`subtotal-${articleId}`);
+        if (subtotalEl) {
+          subtotalEl.textContent = formatPrice(calcItemSubtotal(article));
+        }
       }
       updatePriceBar();
     }
@@ -1983,6 +2036,8 @@
 
       const artikelPayload = orderedItems.map(article => {
         const sel = state.selections[article.id];
+        const isSponsoredFree = article.sponsored && getSponsoredFreeId() === article.id;
+        const effektiverPreis = isSponsoredFree ? 0 : article.price;
         const initCost = (article.allowsInitials && sel.initialen) ? INITIALEN_PREIS * sel.stueckzahl : 0;
         return {
           artikelnummer:      article.artikelnummer,
@@ -1991,9 +2046,10 @@
           groesse:            sel.groesse,
           initialen:          sel.initialen || "",
           stueckzahl:         sel.stueckzahl,
-          einzelpreis:        article.price,
+          einzelpreis:        effektiverPreis,
           initialen_aufpreis: initCost,
           zwischensumme:      calcItemSubtotal(article),
+          gesponsert:         isSponsoredFree,
         };
       });
 
