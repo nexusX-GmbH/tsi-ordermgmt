@@ -595,6 +595,17 @@
       white-space: nowrap;
     }
 
+    .article-card__price--sponsored {
+      background: var(--color-primary);
+      color: #fff;
+      font-size: var(--text-sm);
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
     .article-card__desc {
       font-size: var(--text-sm);
       color: var(--color-text-muted);
@@ -1817,12 +1828,14 @@
       const sponsorHtml = article.sponsorText
         ? `<p class="article-card__sponsor">${escapeHtml(article.sponsorText)}</p>`
         : "";
-      const priceId = article.sponsored ? ` id="price-display-${article.id}"` : "";
+      const priceDisplay = article.sponsored
+        ? `<div class="article-card__price article-card__price--sponsored">gesponsert</div>`
+        : `<div class="article-card__price">${formatPrice(article.price)}</div>`;
       body.innerHTML = `
         <div class="article-card__header">
           <h2 class="article-card__name">${escapeHtml(article.name)}${subtitleHtml}</h2>
           <div class="article-card__price-wrap">
-            <div class="article-card__price"${priceId}>${formatPrice(article.price)}</div>
+            ${priceDisplay}
             ${tcbLogoHtml}
           </div>
         </div>
