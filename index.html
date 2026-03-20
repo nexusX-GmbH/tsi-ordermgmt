@@ -165,6 +165,37 @@
       margin-top: 2px;
     }
 
+    .site-header__sponsors {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: auto;
+      padding-left: var(--space-lg);
+    }
+
+    .site-header__sponsor-label {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,.5);
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .site-header__sponsor-logos {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .site-header__sponsor-logo {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+      background: #fff;
+      border-radius: 4px;
+      padding: 4px 8px;
+    }
+
     .container {
       max-width: 1100px;
       margin: 0 auto;
@@ -1215,9 +1246,17 @@
       <div class="site-header__brand">
         <img src="images/logo-tcb.png" alt="TC Bamberg Logo" class="site-header__logo-img" />
         <div>
-          <div class="site-header__logo">Tennis-Club Bamberg <span>1882 e.V.</span></div>
+          <div class="site-header__logo">Tennis-Club Bamberg <span>1882 e.V. – Herren 40</span></div>
           <div class="site-header__subtitle">Teamkleidung Bestellplattform</div>
-          <div style="color:#f59e0b;font-size:16px;font-weight:700;margin-top:4px;">TESTVERSION – Bestellungen werden nicht wirklich ausgelöst!</div>
+        </div>
+      </div>
+      <div class="site-header__sponsors">
+        <span class="site-header__sponsor-label">gesponsert von</span>
+        <div class="site-header__sponsor-logos">
+          <img src="images/tom-logo.png" alt="TOM Consultancy & Engineering" class="site-header__sponsor-logo" />
+          <img src="images/mefo-logo.png" alt="MEFO FLOOR" class="site-header__sponsor-logo" />
+          <img src="images/aventi.svg" alt="Autohaus Aventi" class="site-header__sponsor-logo" />
+          <img src="images/bruetting-logo.png" alt="Brütting International" class="site-header__sponsor-logo" />
         </div>
       </div>
     </div>
