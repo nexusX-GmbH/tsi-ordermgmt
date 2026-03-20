@@ -1895,7 +1895,8 @@
       const sel = state.selections[articleId];
       const article = state.articles.find(a => a.id === articleId);
 
-      const newQty = Math.max(0, Math.min(10, sel.stueckzahl + delta));
+      const maxQty = article.maxQty ?? 10;
+      const newQty = Math.max(0, Math.min(maxQty, sel.stueckzahl + delta));
       sel.stueckzahl = newQty;
 
       // Anzeigen aktualisieren
@@ -1911,7 +1912,7 @@
 
       // +/- Buttons aktualisieren
       card.querySelector(".qty-minus").disabled = newQty <= 0;
-      card.querySelector(".qty-plus").disabled  = newQty >= 10;
+      card.querySelector(".qty-plus").disabled  = newQty >= maxQty;
 
       if (SPONSORED_IDS.includes(articleId)) updateSponsoredPrices();
       updatePriceBar();
