@@ -1516,10 +1516,8 @@
             </div>
 
             <div class="paypal-section">
-              <p class="paypal-section__label">Bitte überweise den Betrag per PayPal:</p>
-              <a class="btn-paypal" id="paypal-link" href="#" target="_blank" rel="noopener">
-                Jetzt per PayPal bezahlen
-              </a>
+              <p class="paypal-section__label">Bitte überweise den Betrag per PayPal an:<br><strong>t.simon1977@googlemail.com</strong></p>
+              <img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-200px.png" alt="PayPal" style="height:48px;width:auto;" />
             </div>
           </div>
 
@@ -2153,10 +2151,6 @@
       document.getElementById("confirmation-subtitle").textContent =
         `Wir haben deine Bestellung erhalten, ${vorname}. Eine Bestätigung wurde an ${email} gesendet.`;
 
-      // PayPal-Link mit Betrag befüllen
-      const betrag = gesamtsumme.toFixed(2);
-      const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(PAYPAL_BUSINESS)}&amount=${betrag}&currency_code=EUR&item_name=${encodeURIComponent("TC Bamberg Teamkleidung")}`;
-      document.getElementById("paypal-link").href = paypalUrl;
 
       document.getElementById("confirmation-name").textContent =
         `${vorname} ${nachname}`;
