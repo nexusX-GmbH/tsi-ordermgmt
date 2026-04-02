@@ -1320,6 +1320,7 @@
     <!-- SEKTION 1: ARTIKELKATALOG -->
     <section class="section active" id="section-catalog" aria-labelledby="catalog-title">
       <div class="container">
+        <p style="color:red;font-size:20px;font-weight:700;margin-bottom:16px;text-align:center;">Keine Bestellungen mehr möglich!</p>
         <p style="color:red;font-size:16px;font-weight:700;margin-bottom:8px;">Die gesponserten Artikel müssen in Deiner Größe und mit der Menge 1 bestellt werden. Sie sind durch unsere Sponsoren kostenlos für die Spieler!</p>
         <p style="color:red;font-size:16px;font-weight:700;margin-bottom:16px;">Die Kleidung fällt relativ klein aus und sollte ggf. eine Nummer größer bestellt werden!</p>
         <h1 class="section__title" id="catalog-title">Artikel auswählen</h1>
@@ -1673,7 +1674,7 @@
         const sel = state.selections[a.id];
         return sel && sel.stueckzahl > 0;
       });
-      bar.classList.toggle("visible", inCatalog && hasItems);
+      bar.classList.toggle("visible", false); // Bestellungen deaktiviert
     }
 
     /* ----------------------------------------------------------
@@ -1885,7 +1886,7 @@
         <div class="quantity-control">
           <button class="qty-btn qty-minus" type="button" aria-label="Stückzahl verringern" disabled>−</button>
           <span class="qty-value" id="qty-${article.id}" aria-live="polite">0</span>
-          <button class="qty-btn qty-plus" type="button" aria-label="Stückzahl erhöhen">+</button>
+          <button class="qty-btn qty-plus" type="button" aria-label="Stückzahl erhöhen" disabled>+</button>
         </div>`;
 
       qtyRow.querySelector(".qty-minus").addEventListener("click", () => onQtyChange(article.id, -1));
